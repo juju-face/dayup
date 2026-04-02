@@ -1,0 +1,187 @@
+/* packageParent/pages/time-list/index.wxss */
+
+.container {
+  min-height: 100vh;
+  background-color: var(--bg-gray);
+}
+
+/* 搜索栏 */
+.search-bar {
+  background-color: var(--white);
+  padding: 16rpx 32rpx;
+  border-bottom: 1rpx solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-gray);
+  border-radius: 8rpx;
+  padding: 16rpx 20rpx;
+  min-height: 88rpx;
+}
+
+.search-icon {
+  font-size: 24rpx;
+  margin-right: 16rpx;
+  color: var(--text-secondary);
+}
+
+.search-input input {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--text-primary);
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+/* 时段列表 */
+.time-list {
+  padding: 24rpx 32rpx;
+}
+
+/* 时段卡片 */
+.time-card {
+  background-color: var(--white);
+  border-radius: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+  min-height: 240rpx;
+  display: flex;
+  align-items: center;
+}
+
+.time-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.04);
+}
+
+.time-card-full {
+  opacity: 0.8;
+}
+
+.time-card-content {
+  padding: 32rpx;
+  flex: 1;
+}
+
+.time-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.time-card-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 44rpx;
+}
+
+.time-card-status {
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  margin-left: 24rpx;
+  min-width: 80rpx;
+  text-align: center;
+}
+
+.status-available {
+  background-color: #E8FFF0;
+  color: #33CC66;
+}
+
+.status-full {
+  background-color: #FFF0E8;
+  color: #FF9966;
+}
+
+.time-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.time-card-item {
+  display: flex;
+  align-items: center;
+  min-height: 44rpx;
+}
+
+.time-card-label {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.time-card-value {
+  font-size: 24rpx;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 34rpx;
+  display: flex;
+  align-items: center;
+}
+
+.time-card-value.price {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.price-number {
+  font-family: 'DIN Alternate', 'Helvetica Neue', sans-serif;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin: 0 4rpx;
+}
+
+.status-tip {
+  margin-left: 8rpx;
+  font-size: 22rpx;
+}
+
+/* 已满遮罩 */
+.time-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4rpx);
+}
+
+.overlay-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 16rpx 32rpx;
+  background-color: var(--white);
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 空数据容器 */
+.empty-container {
+  padding: 120rpx 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

@@ -1,0 +1,71 @@
+<!-- packageTeacher/pages/home/home.wxml -->
+<!-- [修改点1] 在最外层 view 添加 class="teacher-home theme-teacher" 以便样式作用域隔离 -->
+<!-- 【调试代码】使用内联 style 作为兜底，确保背景色一定生效 -->
+<view class="teacher-home theme-teacher page-teacher-home" data-role="teacher" style="min-height: 100vh; background: #F5F7FA;">
+  <!-- [修改点2] 将原有的 <view class="container"> 改为 <view class="t-container"> -->
+  <view class="t-container">
+    <!-- 顶部时段栏 -->
+    <view class="time-slot-bar">
+      <view class="time-slot-info">
+        <view class="time-slot-name t-h3">{{ currentTimeSlot.name }}</view>
+        <view class="time-slot-range t-caption">{{ currentTimeSlot.timeRange }}</view>
+      </view>
+      <picker bindchange="bindTimeSlotChange" value="{{ timeSlotIndex }}" range="{{ timeSlotOptions }}" range-key="name">
+        <view class="time-slot-picker">
+          切换 ▼
+        </view>
+      </picker>
+    </view>
+
+    <!-- 统计卡片区 -->
+    <view class="stats-section">
+      <view class="stats-grid">
+        <view class="stat-item">
+          <!-- [修改点3] 统计数字部分，给数字文本添加 class="t-h1 font-din"，给标签添加 class="t-caption" -->
+          <view class="stat-value t-h1 font-din">{{ stats.expected }}</view>
+          <view class="stat-label t-caption">应到</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value t-h1 font-din" style="color: #1890FF;">{{ stats.actual }}</view>
+          <view class="stat-label t-caption">实到</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value t-h1 font-din" style="color: {{ stats.inClass > 0 ? '#FAAD14' : '#52C41A' }}">{{ stats.inClass }}</view>
+          <view class="stat-label t-caption">在班</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 待签退警示区 -->
+    <view wx:if="{{ stats.pendingCheckOut > 0 }}" class="warning-section" bindtap="navigateToRecords">
+      <view class="warning-content">
+        <text class="warning-icon">⚠️</text>
+        <text class="warning-text">还有 {{ stats.pendingCheckOut }} 名学生未签退</text>
+      </view>
+    </view>
+
+    <!-- 在班学生网格 -->
+    <view class="students-section">
+      <view class="section-title t-h3">在班学生</view>
+      <view wx:if="{{ inClassStudents.length > 0 }}" class="students-grid">
+        <view wx:for="{{ inClassStudents }}" wx:key="{{ item.id }}" class="student-item" bindtap="showStudentDetail" data-student="{{ item }}">
+          <view class="student-avatar">
+            <image src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+          </view>
+          <view class="student-name t-body">{{ item.name }}</view>
+          <view wx:if="{{ item.justCheckedIn }}" class="student-status">刚刚</view>
+        </view>
+      </view>
+      <view wx:else class="empty-students">
+        <view class="empty-icon">👥</view>
+        <view class="empty-text t-body">当前无在班学生</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- [修改点4] 在页面底部（</page> 前）增加悬浮按钮 -->
+  <view class="float-check-btn" bindtap="onFloatCheck">
+    <text class="iconfont icon-scan"></text>
+  </view>
+  <text class="float-check-text">快速签到</text>
+</view>

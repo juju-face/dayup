@@ -1,0 +1,45 @@
+/* pages/parent/profile/index.wxss */
+.container {
+  min-height: 100vh;
+  background: #FFF8F0;
+  padding: 32rpx;
+}
+
+.header {
+  margin-bottom: 32rpx;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #1A1A1A;
+}
+
+.menu-list {
+  background: white;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #F0F0F0;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1A1A1A;
+}
+
+.menu-arrow {
+  font-size: 32rpx;
+  color: #CCC;
+}

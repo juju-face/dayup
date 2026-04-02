@@ -1,0 +1,331 @@
+.container {
+  min-height: 100vh;
+  background: #F5F7FA;
+  padding-bottom: 40rpx;
+}
+
+/* 加载中 */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400rpx;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+}
+
+.empty-tip {
+  font-size: 26rpx;
+  color: #999;
+  text-align: center;
+}
+
+/* 孩子信息头部 */
+.child-header {
+  background: #FFFFFF;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  text-align: center;
+}
+
+.child-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.child-class {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 顶部横幅 */
+.banner {
+  height: 180rpx;
+  background: linear-gradient(135deg, #FF7A45 0%, #FF9A6B 100%);
+  border-radius: 0 0 40rpx 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: white;
+}
+
+/* 费用标准卡片 */
+.price-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: -40rpx 24rpx 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 10;
+}
+
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.price-item:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.price-item.term {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8rpx;
+}
+
+.price-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.price-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #FF7A45;
+}
+
+.term-price {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.original-price {
+  font-size: 24rpx;
+  color: #FF4D4F;
+  text-decoration: line-through;
+}
+
+.service-list {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #F5F5F5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24rpx;
+}
+
+.service-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.service-icon {
+  font-size: 24rpx;
+  color: #52C41A;
+}
+
+.service-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 当前状态卡片 */
+.status-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 0 24rpx 24rpx;
+  padding: 32rpx;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.status-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.status-badge {
+  padding: 12rpx 32rpx;
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  color: white;
+  font-weight: 500;
+}
+
+.status-badge.paid {
+  background: #52C41A;
+}
+
+.status-badge.pending {
+  background: #FF4D4F;
+}
+
+.days-section {
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.days-label {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.days-value {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #FF7A45;
+  font-family: 'DIN', sans-serif;
+}
+
+.expire-section {
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+
+.expire-label {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 4rpx;
+}
+
+.expire-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.pay-btn {
+  background: linear-gradient(135deg, #FF7A45 0%, #FF9A6B 100%);
+  border-radius: 48rpx;
+  padding: 28rpx;
+  text-align: center;
+}
+
+.pay-btn-text {
+  font-size: 32rpx;
+  color: white;
+  font-weight: bold;
+}
+
+.paid-info {
+  text-align: center;
+  padding: 28rpx;
+  background: #F6FFED;
+  border-radius: 48rpx;
+}
+
+.paid-text {
+  font-size: 32rpx;
+  color: #52C41A;
+  font-weight: bold;
+}
+
+/* 缴费历史 */
+.history-section {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 0 24rpx;
+  padding: 32rpx;
+}
+
+.history-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24rpx;
+}
+
+.history-list {
+  border-top: 1rpx solid #F5F5F5;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-date {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.history-amount {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.history-status {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.history-status.paid {
+  background: #F6FFED;
+  color: #52C41A;
+}
+
+.history-status.pending {
+  background: #FFF1F0;
+  color: #FF4D4F;
+}
+
+/* 无缴费记录 */
+.no-history {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 0 24rpx;
+  padding: 48rpx;
+  text-align: center;
+}
+
+.no-history-text {
+  font-size: 28rpx;
+  color: #999;
+}

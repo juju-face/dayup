@@ -1,0 +1,172 @@
+.container {
+  min-height: 100vh;
+  padding: 60rpx 64rpx 40rpx;
+  transition: all 0.3s ease;
+}
+
+/* 家长端主题 */
+.parent-theme {
+  background: linear-gradient(180deg, #FFF8F0 0%, #FFFFFF 100%);
+}
+
+.parent-theme .role-tip {
+  background: #FFF8F0;
+}
+
+.parent-theme .role-tip-text {
+  color: #FF7A45;
+}
+
+.parent-theme .save-btn {
+  background: linear-gradient(135deg, #FF7A45 0%, #FF9A6B 100%);
+  box-shadow: 0 8rpx 24rpx rgba(255, 122, 69, 0.3);
+}
+
+/* 教师端主题 */
+.teacher-theme {
+  background: linear-gradient(180deg, #F0F5FF 0%, #FFFFFF 100%);
+}
+
+.teacher-theme .role-tip {
+  background: #F0F5FF;
+}
+
+.teacher-theme .role-tip-text {
+  color: #6B73FF;
+}
+
+.teacher-theme .save-btn {
+  background: linear-gradient(135deg, #6B73FF 0%, #8B5CF6 100%);
+  box-shadow: 0 8rpx 24rpx rgba(107, 115, 255, 0.3);
+}
+
+/* 顶部标题 */
+.header {
+  margin-bottom: 64rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1A1A1A;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 表单区域 */
+.form-section {
+  margin-bottom: 80rpx;
+}
+
+.role-tip {
+  border-radius: 24rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+  transition: all 0.3s ease;
+}
+
+.role-tip-icon {
+  font-size: 48rpx;
+}
+
+.role-tip-text {
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.input-item {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.input-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  min-width: 120rpx;
+}
+
+.input-field {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+}
+
+.input-value {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.picker-text {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.arrow {
+  font-size: 20rpx;
+  color: #999;
+}
+
+/* 信息提示 */
+.info-tip {
+  background: #E6F7FF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-top: 32rpx;
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+}
+
+.info-tip-icon {
+  font-size: 32rpx;
+}
+
+.info-tip-text {
+  font-size: 26rpx;
+  color: #1890FF;
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* 保存按钮 */
+.save-btn {
+  border-radius: 48rpx;
+  padding: 32rpx;
+  text-align: center;
+  margin-bottom: 40rpx;
+  transition: all 0.3s ease;
+}
+
+.save-btn-text {
+  font-size: 32rpx;
+  color: white;
+  font-weight: bold;
+}
+
+/* 底部提示 */
+.footer {
+  text-align: center;
+}
+
+.footer-text {
+  font-size: 24rpx;
+  color: #999;
+}

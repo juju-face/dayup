@@ -1,0 +1,149 @@
+<view class="profile-container">
+  <!-- 顶部班级切换 -->
+  <view class="class-switch">
+    <scroll-view scroll-x="true" class="class-scroll">
+      <view wx:for="{{classList}}" wx:key="id" 
+            class="class-tag {{currentClass === item.id ? 'active' : ''}}"
+            bindtap="switchClass" data-id="{{item.id}}">
+        {{item.name}}
+      </view>
+    </scroll-view>
+    <view class="divider"></view>
+  </view>
+
+  <!-- 今日概览卡片 -->
+  <view class="overview-card" animation="{{cardAnimation}}">
+    <view class="card-header">
+      <text class="header-icon">📊</text>
+      <text class="header-title">今日数据概览</text>
+    </view>
+    <view class="overview-grid">
+      <view class="overview-item">
+        <text class="overview-number blue">{{todayData.inputCount}}</text>
+        <text class="overview-label">录入数</text>
+      </view>
+      <view class="overview-item">
+        <text class="overview-number {{todayData.completionRate > 80 ? 'green' : todayData.completionRate < 60 ? 'orange' : 'gray'}}">
+          {{todayData.completionRate}}<text class="percent-sign">%</text>
+        </text>
+        <text class="overview-label">完成率</text>
+      </view>
+      <view class="overview-item">
+        <text class="overview-number red {{todayData.correctionCount > 0 ? 'pulse' : ''}}">{{todayData.correctionCount}}</text>
+        <text class="overview-label">待订正</text>
+      </view>
+    </view>
+    <text class="trend-text">较昨日 +{{todayData.trend}}%</text>
+  </view>
+
+  <!-- 效率工具区 -->
+  <view class="tools-card">
+    <view class="card-header">
+      <text class="header-icon">⚡</text>
+      <text class="header-title">效率工具</text>
+    </view>
+    <view class="tools-grid">
+      <view class="tool-item" bindtap="toolClick" data-type="template">
+        <view class="tool-icon blue-gradient">
+          <text class="icon">📋</text>
+        </view>
+        <text class="tool-label">模板录入</text>
+      </view>
+      <view class="tool-item" bindtap="toolClick" data-type="copy">
+        <view class="tool-icon purple-gradient">
+          <text class="icon">📄</text>
+        </view>
+        <text class="tool-label">复制昨日</text>
+      </view>
+      <view class="tool-item" bindtap="toolClick" data-type="batch">
+        <view class="tool-icon cyan-gradient">
+          <text class="icon">📊</text>
+        </view>
+        <text class="tool-label">批量录入</text>
+      </view>
+      <view class="tool-item" bindtap="toolClick" data-type="phrase">
+        <view class="tool-icon orange-gradient">
+          <text class="icon">💬</text>
+        </view>
+        <text class="tool-label">快捷短语</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据洞察 -->
+  <view class="insight-card">
+    <view class="card-header">
+      <text class="header-icon">📈</text>
+      <text class="header-title">数据洞察</text>
+    </view>
+    <view class="trend-section">
+      <text class="trend-title">7日趋势</text>
+      <view class="trend-bars">
+        <view wx:for="{{weekTrend}}" wx:key="index" 
+              class="trend-bar {{item.isToday ? 'today' : ''}}"
+              style="width: {{item.rate}}%">
+          <text class="bar-label">{{item.date}}</text>
+          <text class="bar-value">{{item.rate}}%</text>
+        </view>
+      </view>
+    </view>
+    <view class="attention-section">
+      <text class="attention-title">待关注学生</text>
+      <view wx:for="{{attentionStudents}}" wx:key="id" class="student-item">
+        <view class="student-info">
+          <view class="student-avatar">{{item.name.charAt(0)}}</view>
+          <view class="student-details">
+            <text class="student-name">{{item.name}}</text>
+            <view class="completion-tag">
+              <text>{{item.completionRate}}%</text>
+            </view>
+          </view>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 家长连接器 -->
+  <view class="parent-card">
+    <view class="card-header">
+      <text class="header-icon">📢</text>
+      <text class="header-title">家长沟通</text>
+    </view>
+    <view class="parent-buttons">
+      <view class="parent-button left red-gradient" bindtap="parentAction" data-type="notify">
+        <text class="button-icon">📱</text>
+        <text class="button-text">一键通知</text>
+      </view>
+      <view class="parent-button right blue-bg" bindtap="parentAction" data-type="export">
+        <text class="button-icon">📄</text>
+        <text class="button-text">导出报表</text>
+      </view>
+    </view>
+    <text class="parent-hint">今日还有{{parentData.unreadCount}}位家长未查看</text>
+  </view>
+
+  <!-- 系统设置 -->
+  <view class="settings-section">
+    <view class="setting-item" bindtap="settingAction" data-type="exportAll">
+      <view class="setting-icon">💾</view>
+      <text class="setting-label">导出全部数据</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="setting-item" bindtap="settingAction" data-type="reset">
+      <view class="setting-icon orange">🔄</view>
+      <text class="setting-label">重置测试数据</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="setting-item" bindtap="settingAction" data-type="switchRole">
+      <view class="setting-icon gray">🚪</view>
+      <text class="setting-label">切换角色</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 底部安全区 -->
+  <view class="footer">
+    <text class="version">V 1.0.0 · 本地测试版</text>
+  </view>
+</view>

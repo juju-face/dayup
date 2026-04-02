@@ -1,0 +1,63 @@
+<!-- packageParent/pages/enroll-records/index.wxml -->
+<view class="container">
+  <!-- 筛选标签 -->
+  <view class="filter-tabs">
+    <view class="filter-tab {{ activeFilter === 'all' ? 'active' : '' }}" bindtap="switchFilter" data-filter="all">
+      全部
+    </view>
+    <view class="filter-tab {{ activeFilter === 'pending' ? 'active' : '' }}" bindtap="switchFilter" data-filter="pending">
+      待签到
+    </view>
+    <view class="filter-tab {{ activeFilter === 'completed' ? 'active' : '' }}" bindtap="switchFilter" data-filter="completed">
+      已完成
+    </view>
+  </view>
+  
+  <!-- 报名记录列表 -->
+  <view class="records-list">
+    <block wx:for="{{ filteredRecords }}" wx:key="{{ item.id }}">
+      <view class="record-item">
+        <!-- 孩子信息 -->
+        <view class="child-info">
+          <view class="child-avatar">
+            <image src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+          </view>
+          <view class="child-details">
+            <view class="child-name">{{ item.childName }}</view>
+            <view class="enroll-time">{{ item.createTime }}</view>
+          </view>
+        </view>
+        
+        <!-- 时段信息 -->
+        <view class="time-slot-info">
+          <view class="time-slot-name">{{ item.timeSlotName }}</view>
+          <view class="time-slot-range">{{ item.timeRange }}</view>
+        </view>
+        
+        <!-- 状态和操作 -->
+        <view class="record-footer">
+          <view class="status-tag {{ item.status }}">
+            {{ item.statusText }}
+          </view>
+          <view class="actions">
+            <view class="action-btn detail-btn" bindtap="viewRecordDetail" data-record="{{ item }}">
+              查看详情
+            </view>
+            <view wx:if="{{ item.status === 'pending' }}" class="action-btn cancel-btn" bindtap="cancelEnroll" data-id="{{ item.id }}">
+              取消报名
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{ filteredRecords.length === 0 }}" class="empty-state">
+      <view class="empty-icon">📋</view>
+      <view class="empty-text">暂无报名记录</view>
+      <navigator url="../time-list/index" class="go-enroll-btn">
+        去报名
+      </navigator>
+    </view>
+  </view>
+</view>

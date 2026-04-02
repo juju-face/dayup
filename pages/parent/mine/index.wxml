@@ -1,0 +1,138 @@
+<!-- 加载中 -->
+<view class="loading-container" wx:if="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>
+
+<!-- 主内容区 -->
+<view class="container" wx:if="{{!loading && parentProfile}}">
+  <!-- 整合的家长+孩子信息卡 -->
+  <view class="family-card">
+    <!-- 家长信息行 -->
+    <view class="family-header">
+      <view class="parent-section">
+        <image class="parent-avatar" src="/assets/default-avatar.png" mode="aspectFill"></image>
+        <view class="parent-text">
+          <text class="parent-phone">{{parentProfile.phone}}</text>
+          <text class="parent-label">家长</text>
+        </view>
+      </view>
+      <view class="family-divider"></view>
+      <!-- 当前孩子信息 -->
+      <view class="current-child-section" wx:if="{{currentChild}}">
+        <image class="child-avatar" src="{{currentChild.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="child-text">
+          <text class="child-name">{{currentChild.name}}</text>
+          <text class="child-class">{{currentChild.school}} {{currentChild.className}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 多孩切换 -->
+    <view class="children-tabs" wx:if="{{childrenList.length > 1}}">
+      <scroll-view scroll-x class="tabs-scroll">
+        <view 
+          class="tab-item {{currentChildId === child.id ? 'active' : ''}}" 
+          wx:for="{{childrenList}}" 
+          wx:for-item="child"
+          wx:key="id"
+          bindtap="handleSwitchChild"
+          data-id="{{child.id}}"
+        >
+          <image class="tab-avatar" src="{{child.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+          <text class="tab-name">{{child.name}}</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 无孩子信息提示 -->
+  <view class="no-child-tip" wx:if="{{!currentChild}}">
+    <text class="tip-icon">👨‍👩‍👧</text>
+    <text class="tip-text">暂无孩子信息</text>
+    <text class="tip-subtext">请联系管理员绑定孩子信息</text>
+  </view>
+
+  <!-- 费用状态卡 -->
+  <view class="fee-status-card" bindtap="handleFeeDetail" wx:if="{{currentChild}}">
+    <view class="fee-header">
+      <view class="fee-left">
+        <text class="fee-label">托管费用</text>
+        <view class="fee-amount">
+          <text class="fee-price">¥{{feeInfo.priceMonth}}</text>
+          <text class="fee-unit">/月</text>
+        </view>
+      </view>
+      <view class="fee-right">
+        <view class="status-badge {{feeInfo.paidStatus}}">
+          {{feeInfo.paidStatus === 'paid' ? '已缴费' : '待缴费'}}
+        </view>
+      </view>
+    </view>
+    <view class="fee-info">
+      <view class="info-item">
+        <text class="info-label">剩余天数</text>
+        <text class="info-value {{feeInfo.remainingDays <= 7 ? 'warning' : ''}}">{{feeInfo.remainingDays}}天</text>
+      </view>
+      <view class="info-divider"></view>
+      <view class="info-item">
+        <text class="info-label">到期日</text>
+        <text class="info-value">{{feeInfo.expireDate}}</text>
+      </view>
+    </view>
+    <view wx:if="{{feeInfo.paidStatus !== 'paid'}}" class="pay-btn" catchtap="handlePay">
+      <text class="pay-btn-text">立即缴费</text>
+    </view>
+    <view wx:if="{{feeInfo.paidStatus === 'paid' && feeInfo.remainingDays <= 7}}" class="renew-tip">
+      <text class="renew-text">⚠️ 即将到期，请及时续费</text>
+    </view>
+  </view>
+
+  <!-- 当前孩子详细信息 -->
+  <view class="detail-card" wx:if="{{currentChild}}">
+    <view class="detail-header">
+      <text class="detail-title">{{currentChild.name}}的详细信息</text>
+    </view>
+    <view class="detail-grid">
+      <view class="grid-item">
+        <text class="grid-label">姓名</text>
+        <text class="grid-value">{{currentChild.name}}</text>
+      </view>
+      <view class="grid-item">
+        <text class="grid-label">性别</text>
+        <text class="grid-value">{{currentChild.gender === 'male' ? '男' : '女'}}</text>
+      </view>
+      <view class="grid-item">
+        <text class="grid-label">学校</text>
+        <text class="grid-value">{{currentChild.school}}</text>
+      </view>
+      <view class="grid-item">
+        <text class="grid-label">班级</text>
+        <text class="grid-value">{{currentChild.className}}</text>
+      </view>
+      <view class="grid-item full">
+        <text class="grid-label">入学日期</text>
+        <text class="grid-value">{{currentChild.enrollDate || '2025-09-01'}}</text>
+      </view>
+      <view class="grid-item full" wx:if="{{currentChild.allergy}}">
+        <text class="grid-label">注意事项</text>
+        <text class="grid-value warning">{{currentChild.allergy}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="action-section">
+    <view class="contact-btn full-width" bindtap="handleContactTeacher">
+      <text class="contact-btn-text">联系老师</text>
+    </view>
+  </view>
+
+  <view class="safe-area"></view>
+</view>
+
+<!-- 未登录状态 -->
+<view class="empty-container" wx:if="{{!loading && !parentProfile}}">
+  <text class="empty-icon">🔒</text>
+  <text class="empty-text">请先登录</text>
+  <text class="empty-tip">登录后可查看孩子信息</text>
+</view>

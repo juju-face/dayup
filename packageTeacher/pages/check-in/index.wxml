@@ -1,0 +1,60 @@
+<!-- packageTeacher/pages/check-in/index.wxml -->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-title">扫码签到</view>
+  
+  <!-- 签到/签退切换 - Segmented Control -->
+  <view class="segmented-control" bindtap="switchCheckType">
+    <view class="segment-item {{ checkType === 'checkIn' ? 'segment-active' : '' }}" data-type="checkIn">
+      <view class="segment-text">签到</view>
+    </view>
+    <view class="segment-item {{ checkType === 'checkOut' ? 'segment-active' : '' }}" data-type="checkOut">
+      <view class="segment-text">签退</view>
+    </view>
+  </view>
+  
+  <!-- 固定时段选择器 -->
+  <view class="time-slot-section">
+    <view class="section-title">当前时段</view>
+    <picker bindchange="bindTimeSlotChange" value="{{ timeSlotIndex }}" range="{{ timeSlotNames }}">
+      <view class="picker">
+        {{ selectedTimeSlot.name || '请选择时段' }}
+      </view>
+    </picker>
+  </view>
+  
+  <!-- 最近签到记录 -->
+  <view class="record-section">
+    <view class="section-title">今日签到记录</view>
+    <view class="record-list">
+      <block wx:for="{{ todayRecords }}" wx:key="{{ item.id }}">
+        <view class="record-item">
+          <view class="record-avatar">
+            <image wx:if="{{ item.avatar }}" src="{{ item.avatar }}" mode="aspectFill"></image>
+            <view wx:else class="avatar-placeholder">
+              <text class="avatar-icon">👶</text>
+            </view>
+          </view>
+          <view class="record-info">
+            <view class="record-child">{{ item.childName }}</view>
+            <view class="record-time">{{ item.checkTime }}</view>
+          </view>
+          <view class="record-type {{ item.type === 'checkIn' ? 'type-checkIn' : 'type-checkOut' }}">
+            <view wx:if="{{ item.type === 'checkIn' }}" class="status-indicator checkIn"></view>
+            <view wx:else class="status-indicator checkOut">!</view>
+            <text class="record-type-text">{{ item.type === 'checkIn' ? '签到' : '签退' }}</text>
+          </view>
+        </view>
+      </block>
+      <view wx:if="{{ todayRecords.length === 0 }}" class="empty-record">
+        <text class="empty-text">暂无签到记录</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 底部悬浮模拟扫码按钮 -->
+  <view class="scan-button" bindtap="scanCode">
+    <text class="scan-icon">📱</text>
+    <text class="scan-text">模拟扫码{{ checkType === 'checkIn' ? '签到' : '签退' }}</text>
+  </view>
+</view>

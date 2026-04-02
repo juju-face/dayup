@@ -1,0 +1,132 @@
+/* styles/teacher-theme.wxss - 老师端专属样式 */
+
+/* 老师端主题变量 */
+.page[data-role="teacher"],
+.theme-teacher {
+  --teacher-primary: #1890FF;
+  --teacher-primary-dark: #096DD9;
+  --teacher-bg: #F5F7FA;
+  --teacher-card-bg: #FFFFFF;
+  --teacher-text-primary: #1A1A1A;
+  --teacher-text-secondary: #666666;
+  --teacher-border: #EEEEEE;
+  --teacher-danger: #FF4D4F;
+  --teacher-success: #52C41A;
+  --teacher-warning: #FAAD14;
+}
+
+/* 字体规范 */
+.font-din {
+  font-family: 'DIN Alternate', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.font-pingfang {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 字号层级 */
+.t-h1 {
+  font-size: 48rpx;
+  font-weight: 700;
+  line-height: 64rpx;
+}
+
+.t-h2 {
+  font-size: 36rpx;
+  font-weight: 600;
+  line-height: 48rpx;
+}
+
+.t-h3 {
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 42rpx;
+}
+
+.t-body {
+  font-size: 28rpx;
+  font-weight: 400;
+  line-height: 42rpx;
+}
+
+.t-caption {
+  font-size: 24rpx;
+  font-weight: 400;
+  line-height: 34rpx;
+}
+
+.t-number {
+  font-size: 40rpx;
+  font-weight: 700;
+  font-family: 'DIN Alternate', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 通用组件 */
+.teacher-card {
+  background-color: var(--teacher-card-bg);
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.teacher-btn-primary {
+  background-color: var(--teacher-primary);
+  color: white;
+  border-radius: 8rpx;
+  height: 88rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.teacher-btn-primary:active {
+  background-color: var(--teacher-primary-dark);
+}
+
+.teacher-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+/* 安全区工具类 */
+.safe-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 老师端特有样式 */
+.page[data-role="teacher"] {
+  background-color: var(--teacher-bg);
+  color: var(--teacher-text-primary);
+}
+
+.page[data-role="teacher"] .card {
+  background-color: var(--teacher-card-bg);
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.page[data-role="teacher"] .text-primary {
+  color: var(--teacher-text-primary);
+}
+
+.page[data-role="teacher"] .text-secondary {
+  color: var(--teacher-text-secondary);
+}
+
+.page[data-role="teacher"] .border {
+  border-color: var(--teacher-border);
+}
+
+.page[data-role="teacher"] .btn-primary {
+  background-color: var(--teacher-primary);
+}
+
+.page[data-role="teacher"] .btn-primary:active {
+  background-color: var(--teacher-primary-dark);
+}

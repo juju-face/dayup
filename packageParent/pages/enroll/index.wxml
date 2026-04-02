@@ -1,0 +1,79 @@
+<!-- packageParent/pages/enroll/index.wxml -->
+<view class="container">
+  <!-- 时段信息卡片 -->
+  <view class="time-slot-card">
+    <view class="time-slot-header">
+      <view class="time-slot-title">所选时段</view>
+    </view>
+    <view class="time-slot-content">
+      <view class="time-slot-item">
+        <text class="label">时段名称：</text>
+        <text class="value">{{ timeSlot.name }}</text>
+      </view>
+      <view class="time-slot-item">
+        <text class="label">时间段：</text>
+        <text class="value">{{ timeSlot.timeRange }}</text>
+      </view>
+      <view class="time-slot-item">
+        <text class="label">价格：</text>
+        <text class="value price">¥{{ timeSlot.price }}/天</text>
+      </view>
+      <view class="time-slot-item">
+        <text class="label">剩余名额：</text>
+        <text class="value">{{ timeSlot.maxKids - timeSlot.currentKids }}/{{ timeSlot.maxKids }}人</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 选择孩子区域 -->
+  <view class="child-section">
+    <view class="section-title">选择孩子</view>
+    
+    <!-- 无孩子提示 -->
+    <view wx:if="{{ childrenList.length === 0 }}" class="no-children">
+      <text class="no-children-text">暂无孩子信息</text>
+      <view class="add-child-button" bindtap="navigateToAddChild">
+        请先添加孩子
+      </view>
+    </view>
+    
+    <!-- 孩子选择列表 -->
+    <view wx:else class="child-list">
+      <view 
+        wx:for="{{ childrenList }}" 
+        wx:key="{{ item.id }}"
+        class="child-item {{ selectedChildId === item.id ? 'child-item-selected' : '' }}"
+        bindtap="selectChild"
+        data-child-id="{{ item.id }}"
+      >
+        <view class="child-avatar">
+          <image wx:if="{{ item.avatarUrl }}" src="{{ item.avatarUrl }}" mode="aspectFill"></image>
+          <view wx:else class="avatar-placeholder">
+            <text class="avatar-icon">👶</text>
+          </view>
+        </view>
+        <view class="child-info">
+          <view class="child-name">{{ item.name }}</view>
+          <view class="child-details">
+            <text class="detail-item">{{ item.gender }} | {{ item.age }}岁</text>
+            <text class="detail-item">{{ item.school }}</text>
+          </view>
+        </view>
+        <view class="radio {{ selectedChildId === item.id ? 'radio-checked' : '' }}">
+          <view wx:if="{{ selectedChildId === item.id }}" class="radio-inner"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 底部价格和提交按钮 -->
+  <view class="bottom-bar">
+    <view class="price-info">
+      <text class="price-label">总价：</text>
+      <text class="price-value">¥{{ timeSlot.price }}</text>
+    </view>
+    <view class="submit-button" bindtap="submitEnroll">
+      提交报名
+    </view>
+  </view>
+</view>

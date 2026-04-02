@@ -1,0 +1,11 @@
+<!-- custom-tab-bar/index.wxml -->
+<view wx:if="{{ showTabBar }}" class="tab-bar safe-area-bottom role-{{ role }}">
+  <view class="tab-bar-item" wx:for="{{ tabList }}" wx:key="{{ item.pagePath }}" data-path="{{ item.pagePath }}" bindtap="switchTab">
+    <view class="icon-wrapper {{ selected === item.pagePath ? 'icon-active' : '' }}">
+      <text class="icon-text">{{ selected === item.pagePath ? item.selectedIcon : item.icon }}</text>
+      <!-- 徽章提示 -->
+      <view wx:if="{{ item.badge > 0 }}" class="badge">{{ item.badge }}</view>
+    </view>
+    <view class="text {{ selected === item.pagePath ? 'text-active' : '' }}">{{ item.text }}</view>
+  </view>
+</view>

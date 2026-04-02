@@ -1,0 +1,38 @@
+<view class="container">
+  <!-- 顶部：今日日期 -->
+  <view class="header">
+    <text class="today-date">{{formattedDate}}</text>
+    <view class="sync-info">
+      <text class="last-update" wx:if="{{lastUpdateTime}}">上次同步：{{lastUpdateTime}}</text>
+      <view class="refresh-btn" bindtap="handleRefresh">
+        <text class="refresh-icon">{{isLoading ? '⏳' : '🔄'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日作业卡片 -->
+  <view class="homework-card">
+    <view class="card-title">今日作业</view>
+    
+    <view wx:if="{{homework.length === 0}}" class="empty-tip">
+      <text class="empty-icon">📚</text>
+      <text class="empty-text">今日暂无作业</text>
+      <text class="empty-subtext">下拉刷新</text>
+    </view>
+    
+    <view wx:for="{{homework}}" wx:key="id" class="homework-item">
+      <view class="item-left">
+        <text class="subject-tag subject-{{item.subject}}">{{item.subjectName}}</text>
+      </view>
+      <view class="item-center">
+        <text class="homework-content">{{item.content}}</text>
+      </view>
+      <view class="item-right">
+        <text class="status-icon status-{{item.status}}">
+          {{item.status === 1 ? '✓' : item.status === 2 ? '⚠' : '○'}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,80 @@
+<!-- packageTeacher/pages/students/index.wxml -->
+<view class="container">
+  <!-- 顶部：添加按钮 + 筛选 -->
+  <view class="header">
+    <view class="add-btn" bindtap="addStudent">
+      <text class="add-text">添加</text>
+    </view>
+    <view class="filter-btn" bindtap="showFilter">
+      <text class="filter-text">筛选</text>
+    </view>
+  </view>
+  
+  <!-- 学生列表 -->
+  <view class="student-list">
+    <view wx:if="{{filteredStudents.length === 0}}" class="empty-state">
+      <text class="empty-icon">👨‍🎓</text>
+      <text class="empty-text">{{searchKeyword ? '未找到匹配学生' : '暂无学生'}}</text>
+      <text class="empty-tip">{{searchKeyword ? '尝试其他关键词' : '添加学生开始管理'}}</text>
+      <view wx:if="!searchKeyword" class="empty-action">
+        <view class="action-btn primary" bindtap="addStudent">添加学生</view>
+      </view>
+    </view>
+    
+    <view wx:for="{{filteredStudents}}" wx:key="id" class="student-card" bindtap="showStudentDetail" data-id="{{item.id}}">
+      <view class="student-content">
+        <view class="student-info">
+          <text class="student-name">{{item.name}}</text>
+          <text class="student-class">{{item.grade}}年级{{item.class}}班</text>
+        </view>
+        <view class="student-details">
+          <text class="detail-item">家长电话：{{item.parentPhone}}</text>
+          <text class="detail-item">家庭住址：{{item.address}}</text>
+        </view>
+      </view>
+      <view class="student-arrow">›</view>
+    </view>
+    
+    <!-- 学生统计 -->
+    <view class="student-count-bottom">
+      <text class="count-number">{{filteredStudents.length}}</text>
+      <text class="count-label">名学生</text>
+    </view>
+  </view>
+  
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar" wx:if="{{selectedStudents.length > 0}}">
+    <view class="selected-count">已选择 {{selectedStudents.length}} 名学生</view>
+    <view class="batch-actions">
+      <view class="batch-btn" bindtap="batchEdit">编辑</view>
+      <view class="batch-btn danger" bindtap="batchDelete">删除</view>
+    </view>
+  </view>
+  
+  <!-- 筛选弹窗 -->
+  <view wx:if="{{showFilterModal}}" class="modal" catchtap="hideFilter">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">筛选</text>
+        <text class="modal-close" bindtap="hideFilter">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="filter-section">
+          <text class="filter-label">学校</text>
+          <view class="filter-options">
+            <view wx:for="{{schools}}" wx:key="{{item}}" class="filter-option {{filters.school === item ? 'active' : ''}}" bindtap="setFilter" data-key="school" data-value="{{item}}">
+              {{item}}
+            </view>
+            <view class="filter-option {{filters.school === '' ? 'active' : ''}}" bindtap="setFilter" data-key="school" data-value="">
+              全部
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="footer-btn" bindtap="resetFilter">重置</view>
+        <view class="footer-btn primary" bindtap="applyFilter">应用</view>
+      </view>
+    </view>
+  </view>
+</view>

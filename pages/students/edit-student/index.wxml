@@ -1,0 +1,87 @@
+<!-- pages/students/edit-student/index.wxml -->
+<view class="container">
+  <form bindsubmit="formSubmit" class="form">
+    <view class="form-row">
+      <view class="form-item-half">
+        <text class="label">姓名<text class="required">*</text></text>
+        <input name="name" type="text" placeholder="请输入学生姓名" class="input" value="{{formData.name}}" bindinput="bindInput" data-field="name"/>
+      </view>
+      
+      <view class="form-item-half">
+        <text class="label">学校<text class="required">*</text></text>
+        <picker mode="selector" range="{{schoolOptions}}" value="{{schoolIndex}}" bindchange="bindSchoolChange" class="picker">
+          <view class="picker-content {{formData.school ? 'selected' : 'placeholder'}}">
+            {{formData.school ? formData.school : '请选择学校'}}
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+    
+    <view class="form-row">
+      <view class="form-item-half">
+        <text class="label">年级<text class="required">*</text></text>
+        <picker mode="selector" range="{{gradeOptions}}" value="{{gradeIndex}}" bindchange="bindGradeChange" class="picker">
+          <view class="picker-content {{formData.grade ? 'selected' : 'placeholder'}}">
+            {{formData.grade ? gradeOptions[gradeIndex] : '请选择年级'}}
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+      
+      <view class="form-item-half">
+        <text class="label">班级<text class="required">*</text></text>
+        <picker mode="selector" range="{{classOptions}}" value="{{classIndex}}" bindchange="bindClassChange" class="picker">
+          <view class="picker-content {{formData.class ? 'selected' : 'placeholder'}}">
+            {{formData.class ? classOptions[classIndex] : '请选择班级'}}
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">家长电话<text class="required">*</text></text>
+      <input name="parentPhone" type="number" placeholder="请输入11位手机号码" class="input {{phoneError ? 'input-error' : ''}} {{shakePhone ? 'shake' : ''}}" value="{{formData.parentPhone}}" bindinput="bindInput" data-field="parentPhone" maxlength="11"/>
+      <text wx:if="{{phoneError}}" class="error-text">请输入正确的11位手机号码</text>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">家庭住址<text class="required">*</text></text>
+      <view class="address-row">
+        <view class="address-item">
+          <picker mode="selector" range="{{cityOptions}}" value="{{cityIndex}}" bindchange="bindCityChange" class="picker">
+            <view class="picker-content {{selectedCity ? 'selected' : 'placeholder'}}">
+              {{selectedCity ? selectedCity : '请选择市县'}}
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+        
+        <view class="address-item">
+          <picker mode="selector" range="{{districtOptions}}" value="{{districtIndex}}" bindchange="bindDistrictChange" class="picker">
+            <view class="picker-content {{selectedDistrict ? 'selected' : 'placeholder'}}">
+              {{selectedDistrict ? selectedDistrict : '请选择区'}}
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+        
+        <view class="address-item">
+          <picker mode="selector" range="{{streetOptions}}" value="{{streetIndex}}" bindchange="bindStreetChange" class="picker">
+            <view class="picker-content {{selectedStreet ? 'selected' : 'placeholder'}}">
+              {{selectedStreet ? selectedStreet : '请选择街道'}}
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+      <input name="address" type="text" placeholder="详细地址将自动填充" class="input address-input" value="{{formData.address}}" bindinput="bindInput" data-field="address"/>
+    </view>
+    
+    <view class="form-actions">
+      <button formType="submit" class="submit-btn">保存</button>
+      <button type="button" bindtap="cancelEdit" class="cancel-btn">取消</button>
+    </view>
+  </form>
+</view>

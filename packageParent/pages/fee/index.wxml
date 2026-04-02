@@ -1,0 +1,62 @@
+<view class="container">
+  <!-- 顶部横幅 -->
+  <view class="banner">
+    <text class="banner-title">托管费用</text>
+  </view>
+
+  <!-- 费用标准卡片 -->
+  <view class="price-card">
+    <view class="price-item">
+      <text class="price-label">月托</text>
+      <text class="price-value">{{feeInfo.priceMonth}}元/月</text>
+    </view>
+    <view class="price-item term">
+      <text class="price-label">学期托</text>
+      <view class="term-price">
+        <text class="price-value">{{feeInfo.priceTerm}}元/学期</text>
+        <text class="original-price">{{feeInfo.originalPriceTerm}}元</text>
+      </view>
+    </view>
+    <view class="service-list">
+      <view class="service-item" wx:for="{{feeInfo.services}}" wx:key="*this">
+        <text class="service-icon">✓</text>
+        <text class="service-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当前状态卡片 -->
+  <view class="status-card">
+    <view class="status-header">
+      <text class="status-label">缴费状态</text>
+      <view class="status-badge {{feeInfo.paidStatus}}">
+        {{feeInfo.paidStatus === 'paid' ? '已缴费' : '待缴费'}}
+      </view>
+    </view>
+    <view class="days-section">
+      <text class="days-label">剩余天数</text>
+      <text class="days-value">{{feeInfo.remainingDays}}天</text>
+    </view>
+    <view class="expire-section">
+      <text class="expire-label">到期日</text>
+      <text class="expire-date">{{feeInfo.expireDate}}</text>
+    </view>
+    <view wx:if="{{feeInfo.paidStatus !== 'paid'}}" class="pay-btn" bindtap="handlePay">
+      <text class="pay-btn-text">立即缴费</text>
+    </view>
+  </view>
+
+  <!-- 缴费历史 -->
+  <view class="history-section">
+    <view class="history-title">缴费历史</view>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{feeInfo.history}}" wx:key="date">
+        <text class="history-date">{{item.date}}</text>
+        <text class="history-amount">{{item.amount}}元</text>
+        <view class="history-status {{item.status}}">
+          {{item.status === 'paid' ? '已支付' : '待支付'}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "empty-state": "../../../components/common/empty-state"
+  },
+  "navigationBarTitleText": "托管时段",
+  "enablePullDownRefresh": true
+}

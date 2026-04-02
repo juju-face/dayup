@@ -1,0 +1,256 @@
+/* app.wxss - 全局样式（强制覆盖版） */
+
+/* 引入字体系统 */
+@import './styles/typography.wxss';
+
+/* 引入老师端专属样式 */
+@import './styles/teacher-theme.wxss';
+
+/* 引入老师端暗黑模式样式 */
+@import './styles/teacher-dark.wxss';
+
+/* ============================================
+   全局强制字体降级，确保非苹果设备也能显示
+   ============================================ */
+page {
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif !important;
+  background-color: #F5F7FA !important;
+  color: #1A1A1A !important;
+  font-size: 28rpx !important;
+  line-height: 1.6 !important;
+}
+
+/* ============================================
+   强制清除原有导航栏样式，重新设定
+   ============================================ */
+.custom-tab-bar {
+  height: 100rpx !important;
+  background: #FFFFFF !important;
+  border-top: 1rpx solid #EEEEEE !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
+/* ============================================
+   老师端专属变量 - 通过 data-role 属性区分
+   ============================================ */
+page[data-role="teacher"] {
+  --primary: #1890FF;
+  --bg: #F5F7FA;
+  --text: #1A1A1A;
+}
+
+/* ============================================
+   强制卡片样式重置
+   ============================================ */
+.card,
+.teacher-card {
+  background: #FFFFFF !important;
+  border-radius: 16rpx !important;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04) !important;
+  padding: 24rpx !important;
+  margin: 24rpx !important;
+}
+
+/* ============================================
+   强制按钮样式
+   ============================================ */
+.btn-primary,
+.teacher-btn {
+  background: #1890FF !important;
+  color: #FFFFFF !important;
+  border-radius: 8rpx !important;
+  height: 88rpx !important;
+  line-height: 88rpx !important;
+  font-size: 32rpx !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================
+   字体层级强制类
+   ============================================ */
+.t-h1 {
+  font-size: 48rpx !important;
+  font-weight: 700 !important;
+  font-family: 'DIN Alternate', sans-serif !important;
+}
+
+.t-h2 {
+  font-size: 36rpx !important;
+  font-weight: 600 !important;
+}
+
+.t-h3 {
+  font-size: 30rpx !important;
+  font-weight: 600 !important;
+}
+
+.t-body {
+  font-size: 28rpx !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+}
+
+.t-caption {
+  font-size: 24rpx !important;
+  color: #666666 !important;
+}
+
+/* ============================================
+   安全区处理（保留原有功能）
+   ============================================ */
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom) !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
+.safe-area-top {
+  padding-top: constant(safe-area-inset-top) !important;
+  padding-top: env(safe-area-inset-top) !important;
+}
+
+/* ============================================
+   间距系统（使用 !important 确保优先级）
+   ============================================ */
+.mt-xs {
+  margin-top: 8rpx !important;
+}
+
+.mt-sm {
+  margin-top: 16rpx !important;
+}
+
+.mt-md {
+  margin-top: 24rpx !important;
+}
+
+.mt-lg {
+  margin-top: 32rpx !important;
+}
+
+.mt-xl {
+  margin-top: 48rpx !important;
+}
+
+.mb-xs {
+  margin-bottom: 8rpx !important;
+}
+
+.mb-sm {
+  margin-bottom: 16rpx !important;
+}
+
+.mb-md {
+  margin-bottom: 24rpx !important;
+}
+
+.mb-lg {
+  margin-bottom: 32rpx !important;
+}
+
+.mb-xl {
+  margin-bottom: 48rpx !important;
+}
+
+.p-xs {
+  padding: 8rpx !important;
+}
+
+.p-sm {
+  padding: 16rpx !important;
+}
+
+.p-md {
+  padding: 24rpx !important;
+}
+
+.p-lg {
+  padding: 32rpx !important;
+}
+
+.p-xl {
+  padding: 48rpx !important;
+}
+
+/* ============================================
+   文本样式（强制）
+   ============================================ */
+.text-center {
+  text-align: center !important;
+}
+
+.text-primary {
+  color: #1A1A1A !important;
+}
+
+.text-secondary {
+  color: #666666 !important;
+}
+
+/* ============================================
+   边框样式（强制）
+   ============================================ */
+.border {
+  border: 1rpx solid #EEEEEE !important;
+}
+
+.border-top {
+  border-top: 1rpx solid #EEEEEE !important;
+}
+
+.border-bottom {
+  border-bottom: 1rpx solid #EEEEEE !important;
+}
+
+/* ============================================
+   弹性布局（强制）
+   ============================================ */
+.flex {
+  display: flex !important;
+}
+
+.flex-center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.flex-between {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.flex-column {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* ============================================
+   暗黑模式（保留原有功能，使用 !important）
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  page {
+    background-color: #141414 !important;
+    color: #E0E0E0 !important;
+  }
+
+  .card,
+  .teacher-card {
+    background: #1F1F1F !important;
+    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .text-primary {
+    color: #E0E0E0 !important;
+  }
+
+  .text-secondary {
+    color: #999999 !important;
+  }
+
+  .border,
+  .border-top,
+  .border-bottom {
+    border-color: #333333 !important;
+  }
+}

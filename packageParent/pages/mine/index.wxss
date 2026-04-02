@@ -1,0 +1,367 @@
+.container {
+  min-height: 100vh;
+  background: #FFF8F0;
+  padding-bottom: 320rpx;
+}
+
+/* 顶部孩子卡 */
+.child-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 32rpx;
+  padding: 40rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+}
+
+.child-header {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  border: 4rpx solid #FF7A45;
+  background: #F5F5F5;
+}
+
+.child-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.child-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1A1A1A;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.child-class {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.enroll-date {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+}
+
+.edit-btn {
+  padding: 16rpx;
+  margin-left: auto;
+}
+
+.edit-icon {
+  font-size: 32rpx;
+  color: #999;
+}
+
+.divider {
+  height: 1rpx;
+  background: #EEE;
+  margin: 24rpx 0;
+}
+
+.allergy-section {
+  margin-top: 16rpx;
+}
+
+.allergy-text {
+  font-size: 24rpx;
+  color: #FF4D4F;
+  font-weight: 500;
+}
+
+/* 费用状态卡 */
+.fee-status-card {
+  background: linear-gradient(135deg, #FF7A45 0%, #FFB98B 100%);
+  border-radius: 24rpx;
+  margin: 24rpx;
+  padding: 40rpx;
+  color: white;
+}
+
+.fee-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.days-section {
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+}
+
+.days-number {
+  font-size: 64rpx;
+  font-weight: bold;
+  font-family: 'DIN', sans-serif;
+}
+
+.days-unit {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.status-tag {
+  background: white;
+  border-radius: 24rpx;
+  padding: 8rpx 24rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.status-tag.paid {
+  color: #52C41A;
+}
+
+.status-tag.unpaid {
+  color: #FF4D4F;
+}
+
+.expire-date {
+  font-size: 28rpx;
+  opacity: 0.8;
+  display: block;
+}
+
+.overdue-tip {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.overdue-text {
+  font-size: 24rpx;
+  color: #FFF1F0;
+}
+
+/* 费用标准 */
+.fee-standard-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.card-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.price-list {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.price-item {
+  flex: 1;
+}
+
+.price-label {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.price-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #FF7A45;
+}
+
+.price-unit {
+  font-size: 24rpx;
+  color: #999;
+  font-weight: normal;
+}
+
+.price-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background: #EEE;
+}
+
+.term-price {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.original-price {
+  font-size: 22rpx;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.service-section {
+  padding-top: 24rpx;
+  border-top: 1rpx solid #F5F5F5;
+}
+
+.service-title {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.service-tag {
+  background: #F5F5F5;
+  border-radius: 24rpx;
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 缴费历史 */
+.history-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.history-list {
+  margin-top: 16rpx;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  height: 80rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-left {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+}
+
+.status-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+}
+
+.status-dot.paid {
+  background: #52C41A;
+}
+
+.status-dot.unpaid {
+  background: #FF4D4F;
+}
+
+.history-date {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.history-amount {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-right: 24rpx;
+}
+
+.history-status {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.history-status.paid {
+  background: #F6FFED;
+  color: #52C41A;
+}
+
+.history-status.unpaid {
+  background: #FFF1F0;
+  color: #FF4D4F;
+}
+
+/* 底部操作 */
+.action-section {
+  position: fixed;
+  bottom: 160rpx;
+  left: 0;
+  right: 0;
+  padding: 0 32rpx;
+  z-index: 100;
+}
+
+.contact-btn {
+  background: linear-gradient(135deg, #FF7A45 0%, #FF9A6B 100%);
+  border-radius: 48rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(255, 122, 69, 0.3);
+}
+
+.contact-btn-text {
+  font-size: 32rpx;
+  color: white;
+  font-weight: bold;
+}
+
+.switch-btns {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 16rpx;
+}
+
+.switch-btn {
+  flex: 1;
+  background: #FFFFFF;
+  border: 2rpx solid #FF7A45;
+  border-radius: 48rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.switch-btn-text {
+  font-size: 28rpx;
+  color: #FF7A45;
+  font-weight: 500;
+}
+
+.safe-area {
+  height: 40rpx;
+}

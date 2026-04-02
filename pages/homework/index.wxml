@@ -1,0 +1,97 @@
+<!-- pages/homework/index.wxml -->
+<view class="container">
+  <!-- 顶部：日期选择器 + 作业录入按钮 -->
+  <view class="header">
+    <view class="date-picker">
+      <picker mode="date" value="{{currentDate}}" bindchange="selectDate">
+        <view class="date-text">{{currentDate}} ▼</view>
+      </picker>
+    </view>
+    <view class="add-btn" bindtap="showAddModal">
+      <text class="add-text">作业录入</text>
+    </view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-card">
+    <view class="stat-item">
+      <text class="stat-num">{{stats.total}}</text>
+      <text class="stat-label">总作业</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num" style="color: #52C41A;">{{stats.completed}}</text>
+      <text class="stat-label">已完成</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num" style="color: #FF4D4F;">{{stats.pending}}</text>
+      <text class="stat-label">未完成</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num" style="color: #FAAD14;">{{stats.needCorrection}}</text>
+      <text class="stat-label">待订正</text>
+    </view>
+  </view>
+
+  <!-- 作业列表 -->
+  <view class="record-list">
+    <view wx:if="{{records.length === 0}}" class="empty-state">
+      <text class="empty-icon">📝</text>
+      <text class="empty-text">暂无作业</text>
+      <text class="empty-tip">点击右下角按钮录入新作业</text>
+    </view>
+
+    <view wx:for="{{records}}" wx:key="id" class="record-card">
+      <view class="record-header">
+        <text class="student-name">{{item.studentName}}</text>
+        <text class="subject-tag" data-subject="{{item.subject}}">{{item.subject}}</text>
+      </view>
+      <view class="record-content">
+        <text class="content-text">{{item.content}}</text>
+      </view>
+      <view class="record-footer">
+        <picker mode="selector" range="{{statusOptions}}" value="{{item.status}}" bindchange="updateStatus" data-id="{{item.id}}" class="status-picker">
+          <view class="status-picker-value status-{{item.status}}">
+            {{statusOptions[item.status]}}
+          </view>
+        </picker>
+        <view class="delete-btn" bindtap="deleteRecord" data-id="{{item.id}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+
+
+  <!-- 添加作业弹窗 -->
+  <view wx:if="{{showAddModal}}" class="modal" catchtap="hideAddModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">录入新作业</text>
+        <text class="modal-close" bindtap="hideAddModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="form-item">
+          <text class="label">选择学生</text>
+          <picker bindchange="selectStudent" range="{{students}}" range-key="name">
+            <view class="picker-value">{{newRecord.studentName || '请选择学生'}}</view>
+          </picker>
+        </view>
+        <view class="form-item">
+          <text class="label">科目</text>
+          <view class="subject-tags">
+            <view class="subject-tag {{newRecord.subject === '语文' ? 'active' : ''}}" bindtap="selectSubjectTag" data-subject="语文">语文</view>
+            <view class="subject-tag {{newRecord.subject === '数学' ? 'active' : ''}}" bindtap="selectSubjectTag" data-subject="数学">数学</view>
+            <view class="subject-tag {{newRecord.subject === '英语' ? 'active' : ''}}" bindtap="selectSubjectTag" data-subject="英语">英语</view>
+            <view class="subject-tag {{newRecord.subject === '其他' ? 'active' : ''}}" bindtap="selectSubjectTag" data-subject="其他">其他</view>
+          </view>
+        </view>
+        <view class="form-item">
+          <text class="label">作业内容</text>
+          <input type="text" placeholder="如：P12-15" value="{{newRecord.content}}" bindinput="inputContent"/>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="confirm-btn" bindtap="onConfirmAdd">确认添加</view>
+      </view>
+    </view>
+  </view>
+</view>

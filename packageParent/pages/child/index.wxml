@@ -1,0 +1,58 @@
+<view class="container" wx:if="{{child}}">
+  <!-- 头部卡片 -->
+  <view class="header-card">
+    <view class="avatar-wrapper">
+      <image class="avatar" src="{{child.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+    </view>
+    <text class="child-name">{{child.name}}</text>
+    <text class="child-class">{{child.className || '一年级一班'}}</text>
+    <text class="enroll-date">入学日期：{{child.enrollDate || '2025-09-01'}}</text>
+  </view>
+
+  <!-- 基本信息列表 -->
+  <view class="info-card">
+    <view class="info-item">
+      <text class="info-label">性别</text>
+      <text class="info-value">{{child.gender === 'female' ? '女' : '男'}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">年龄</text>
+      <text class="info-value">{{child.age || '7'}}岁</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">出生日期</text>
+      <text class="info-value">{{child.birthday || '2018-05-20'}}</text>
+    </view>
+    <view class="info-item" bindtap="copyPhone">
+      <text class="info-label">家长联系电话</text>
+      <view class="phone-wrapper">
+        <text class="info-value">{{child.parentPhone || '138****1234'}}</text>
+        <text class="copy-icon">📋</text>
+      </view>
+    </view>
+    <view class="info-item">
+      <text class="info-label">家庭住址</text>
+      <text class="info-value">{{child.address || '北京市朝阳区****'}}</text>
+    </view>
+    <view class="info-item allergy" wx:if="{{child.allergy}}">
+      <text class="info-label">过敏/注意事项</text>
+      <text class="info-value allergy-text">{{child.allergy}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">紧急联系人</text>
+      <text class="info-value">{{child.emergencyContact || '张三（爸爸）'}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="btn-section">
+    <view class="btn edit-btn" bindtap="editInfo">
+      <text class="btn-text">编辑资料</text>
+    </view>
+    <view class="btn contact-btn" bindtap="contactTeacher">
+      <text class="btn-text">联系老师</text>
+    </view>
+  </view>
+
+  <view class="safe-area"></view>
+</view>

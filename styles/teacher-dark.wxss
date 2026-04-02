@@ -1,0 +1,271 @@
+/* styles/teacher-dark.wxss - 老师端暗黑模式样式 */
+
+@media (prefers-color-scheme: dark) {
+  /* 页面基础样式 */
+  .page[data-role="teacher"],
+  .theme-teacher-dark {
+    /* 背景色 */
+    --teacher-bg: #141414;
+    --teacher-card-bg: #1F1F1F;
+    --teacher-border: #333333;
+    
+    /* 文字色 */
+    --teacher-text-primary: #E0E0E0;
+    --teacher-text-secondary: #999999;
+    --teacher-text-tertiary: #666666;
+    
+    /* 主题色（降低亮度） */
+    --teacher-primary: #40A9FF;
+    --teacher-primary-dark: #1890FF;
+    --teacher-primary-light: #69C0FF;
+    
+    /* 状态色 */
+    --teacher-danger: #FF7875;
+    --teacher-success: #73D13D;
+    --teacher-warning: #FFC53D;
+    
+    background-color: var(--teacher-bg);
+    color: var(--teacher-text-primary);
+  }
+
+  /* 头部区域 */
+  .page[data-role="teacher"] .header-section,
+  .theme-teacher-dark .header-section {
+    background: linear-gradient(135deg, #096DD9 0%, #0050B3 100%);
+  }
+
+  /* 卡片样式 */
+  .page[data-role="teacher"] .teacher-card,
+  .page[data-role="teacher"] .menu-section,
+  .page[data-role="teacher"] .stats-section,
+  .page[data-role="teacher"] .students-section,
+  .theme-teacher-dark .teacher-card,
+  .theme-teacher-dark .menu-section,
+  .theme-teacher-dark .stats-section,
+  .theme-teacher-dark .students-section {
+    background-color: var(--teacher-card-bg);
+    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.2);
+  }
+
+  /* 列表项 */
+  .page[data-role="teacher"] .menu-item,
+  .page[data-role="teacher"] .record-item,
+  .theme-teacher-dark .menu-item,
+  .theme-teacher-dark .record-item {
+    border-bottom-color: var(--teacher-border);
+  }
+
+  .page[data-role="teacher"] .menu-item:active,
+  .theme-teacher-dark .menu-item:active {
+    background-color: #2A2A2A;
+  }
+
+  /* 图标背景 */
+  .page[data-role="teacher"] .menu-icon-wrapper,
+  .theme-teacher-dark .menu-icon-wrapper {
+    background-color: #1A2B3C;
+  }
+
+  .page[data-role="teacher"] .menu-icon,
+  .theme-teacher-dark .menu-icon {
+    color: var(--teacher-primary);
+  }
+
+  /* 文字颜色 */
+  .page[data-role="teacher"] .menu-text,
+  .page[data-role="teacher"] .record-name,
+  .page[data-role="teacher"] .section-title,
+  .theme-teacher-dark .menu-text,
+  .theme-teacher-dark .record-name,
+  .theme-teacher-dark .section-title {
+    color: var(--teacher-text-primary);
+  }
+
+  .page[data-role="teacher"] .record-time-slot,
+  .page[data-role="teacher"] .time-text,
+  .theme-teacher-dark .record-time-slot,
+  .theme-teacher-dark .time-text {
+    color: var(--teacher-text-secondary);
+  }
+
+  /* 在班学生头像边框 */
+  .page[data-role="teacher"] .student-avatar,
+  .theme-teacher-dark .student-avatar {
+    border-color: #333333;
+  }
+
+  .page[data-role="teacher"] .student-item,
+  .theme-teacher-dark .student-item {
+    background-color: var(--teacher-card-bg);
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  }
+
+  /* Segmented Control */
+  .page[data-role="teacher"] .segmented-control,
+  .theme-teacher-dark .segmented-control {
+    background-color: #1A1A1A;
+  }
+
+  .page[data-role="teacher"] .segment-item,
+  .theme-teacher-dark .segment-item {
+    color: var(--teacher-text-secondary);
+  }
+
+  .page[data-role="teacher"] .segment-active,
+  .theme-teacher-dark .segment-active {
+    background-color: var(--teacher-card-bg);
+    color: var(--teacher-primary);
+  }
+
+  /* 统计卡片 */
+  .page[data-role="teacher"] .stats-grid,
+  .theme-teacher-dark .stats-grid {
+    background-color: var(--teacher-card-bg);
+  }
+
+  .page[data-role="teacher"] .stat-item,
+  .theme-teacher-dark .stat-item {
+    border-right-color: var(--teacher-border);
+  }
+
+  .page[data-role="teacher"] .stat-value,
+  .theme-teacher-dark .stat-value {
+    color: var(--teacher-text-primary);
+  }
+
+  .page[data-role="teacher"] .stat-label,
+  .theme-teacher-dark .stat-label {
+    color: var(--teacher-text-secondary);
+  }
+
+  /* 按钮样式 */
+  .page[data-role="teacher"] .teacher-btn-primary,
+  .theme-teacher-dark .teacher-btn-primary {
+    background-color: var(--teacher-primary-dark);
+  }
+
+  .page[data-role="teacher"] .teacher-btn-primary:active,
+  .theme-teacher-dark .teacher-btn-primary:active {
+    background-color: #0050B3;
+  }
+
+  /* 底部信息 */
+  .page[data-role="teacher"] .footer-label,
+  .theme-teacher-dark .footer-label {
+    color: var(--teacher-text-tertiary);
+  }
+
+  .page[data-role="teacher"] .footer-value,
+  .theme-teacher-dark .footer-value {
+    color: var(--teacher-text-secondary);
+  }
+
+  /* 空状态 */
+  .page[data-role="teacher"] .empty-students,
+  .theme-teacher-dark .empty-students {
+    background-color: var(--teacher-card-bg);
+  }
+
+  .page[data-role="teacher"] .empty-icon,
+  .theme-teacher-dark .empty-icon {
+    color: #444444;
+  }
+
+  /* 警示区 */
+  .page[data-role="teacher"] .warning-section,
+  .theme-teacher-dark .warning-section {
+    background-color: #2A1F1F;
+    border-color: #4A3A3A;
+  }
+
+  .page[data-role="teacher"] .warning-text,
+  .theme-teacher-dark .warning-text {
+    color: #FF7875;
+  }
+
+  /* 表单样式 */
+  .page[data-role="teacher"] .form-step,
+  .theme-teacher-dark .form-step {
+    background-color: var(--teacher-card-bg);
+  }
+
+  .page[data-role="teacher"] .picker-value,
+  .page[data-role="teacher"] .time-input,
+  .theme-teacher-dark .picker-value,
+  .theme-teacher-dark .time-input {
+    background-color: #2A2A2A;
+    color: var(--teacher-text-primary);
+  }
+
+  .page[data-role="teacher"] .student-option,
+  .theme-teacher-dark .student-option {
+    background-color: #2A2A2A;
+  }
+
+  .page[data-role="teacher"] .student-option.selected,
+  .theme-teacher-dark .student-option.selected {
+    background-color: #1A2B3C;
+    border-color: var(--teacher-primary);
+  }
+
+  /* 筛选器 */
+  .page[data-role="teacher"] .query-filters,
+  .theme-teacher-dark .query-filters {
+    background-color: var(--teacher-card-bg);
+  }
+
+  .page[data-role="teacher"] .filter-picker,
+  .theme-teacher-dark .filter-picker {
+    background-color: #2A2A2A;
+    color: var(--teacher-primary);
+  }
+
+  .page[data-role="teacher"] .filter-label,
+  .theme-teacher-dark .filter-label {
+    color: var(--teacher-text-secondary);
+  }
+
+  .page[data-role="teacher"] .checkbox-label,
+  .page[data-role="teacher"] .radio-label,
+  .theme-teacher-dark .checkbox-label,
+  .theme-teacher-dark .radio-label {
+    color: var(--teacher-text-primary);
+  }
+
+  /* 查询结果 */
+  .page[data-role="teacher"] .query-results,
+  .theme-teacher-dark .query-results {
+    background-color: var(--teacher-card-bg);
+  }
+
+  /* 悬浮按钮 */
+  .page[data-role="teacher"] .floating-button,
+  .theme-teacher-dark .floating-button {
+    background-color: var(--teacher-primary-dark);
+    box-shadow: 0 4rpx 20rpx rgba(24, 144, 255, 0.3);
+  }
+
+  .page[data-role="teacher"] .floating-button-label,
+  .theme-teacher-dark .floating-button-label {
+    background-color: var(--teacher-primary-dark);
+  }
+
+  /* 顶部时段栏 */
+  .page[data-role="teacher"] .time-slot-bar,
+  .theme-teacher-dark .time-slot-bar {
+    background-color: var(--teacher-card-bg);
+    border-bottom-color: var(--teacher-border);
+  }
+
+  .page[data-role="teacher"] .time-slot-picker,
+  .theme-teacher-dark .time-slot-picker {
+    background-color: #1A2B3C;
+    color: var(--teacher-primary);
+  }
+
+  /* 加载更多 */
+  .page[data-role="teacher"] .loading-more,
+  .theme-teacher-dark .loading-more {
+    color: var(--teacher-text-tertiary);
+  }
+}

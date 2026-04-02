@@ -1,0 +1,25 @@
+/* role-badge.wxss */
+
+.role-badge {
+  padding: 8rpx 20rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+/* 家长端样式：圆角胶囊，背景 #FFF2E8，文字 #FF9500，边框 1rpx solid #FF9500 */
+.role-parent {
+  background-color: #FFF2E8;
+  color: #FF9500;
+  border: 1rpx solid #FF9500;
+  border-radius: 40rpx;
+}
+
+/* 老师端样式：方形圆角 8rpx，背景 #E6F7FF，文字 #1890FF，无框 */
+.role-teacher {
+  background-color: #E6F7FF;
+  color: #1890FF;
+  border-radius: 8rpx;
+  border: none;
+}

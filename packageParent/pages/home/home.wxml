@@ -1,0 +1,74 @@
+<!-- packageParent/pages/home/home.wxml -->
+<view class="container">
+  <!-- 轮播图 -->
+  <view class="banner">
+    <swiper autoplay interval="3000" duration="500" indicator-dots>
+      <swiper-item>
+        <view class="banner-item banner-1">
+          <view class="banner-title">专业托管服务</view>
+          <view class="banner-desc">让孩子快乐成长</view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view class="banner-item banner-2">
+          <view class="banner-title">作业辅导</view>
+          <view class="banner-desc">专业老师一对一指导</view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view class="banner-item banner-3">
+          <view class="banner-title">实时沟通</view>
+          <view class="banner-desc">随时了解孩子动态</view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+  
+  <!-- 欢迎语 -->
+  <view class="welcome">
+    <text class="welcome-text">欢迎使用托管服务</text>
+  </view>
+  
+  <!-- 快捷入口 -->
+  <view class="quick-entry">
+    <view class="entry-item" bindtap="navigateToTimeSlots">
+      <view class="entry-icon">📅</view>
+      <view class="entry-text">查看时段</view>
+    </view>
+    <view class="entry-item" bindtap="navigateToChild">
+      <view class="entry-icon">👶</view>
+      <view class="entry-text">我的孩子</view>
+    </view>
+    <view class="entry-item" bindtap="navigateToOrder">
+      <view class="entry-icon">📋</view>
+      <view class="entry-text">报名记录</view>
+    </view>
+  </view>
+  
+  <!-- 托管时段列表 -->
+  <view class="time-slots">
+    <view class="section-title">热门托管时段</view>
+    <view class="time-slot-card" wx:for="{{ timeSlots }}" wx:key="{{ item.id }}">
+      <view class="time-slot-info">
+        <view class="time-slot-name">{{ item.name }}</view>
+        <view class="time-slot-range">{{ item.timeRange }}</view>
+        <view class="time-slot-price">¥<text class="price-number">{{ item.price }}</text>/天</view>
+      </view>
+      <view class="time-slot-status">
+        <view class="status-text" style="color: {{ (item.maxKids - item.currentKids) <= 2 ? '#FF4444' : '#52C41A' }}">
+          {{ item.currentKids }}/{{ item.maxKids }}人
+          <text wx:if="(item.maxKids - item.currentKids) <= 2" class="status-tip">（名额紧张）</text>
+          <text wx:else class="status-tip">（名额充足）</text>
+        </view>
+        <view class="status-bar">
+          <view class="status-fill" style="width: {{ (item.currentKids / item.maxKids) * 100 }}%"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 切换角色按钮 -->
+  <view class="switch-role" bindtap="switchRole">
+    <text>切换到老师端</text>
+  </view>
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "签到明细",
+  "usingComponents": {
+    "empty-state": "../../../components/common/empty-state"
+  }
+}

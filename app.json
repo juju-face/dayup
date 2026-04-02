@@ -1,0 +1,78 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/register/index",
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/homework/index",
+    "pages/students/index",
+    "pages/students/add-student/index",
+    "pages/students/edit-student/index",
+    "pages/profile/index",
+    "pages/profile/edit-profile/index",
+    "pages/parent/homework/index",
+    "pages/parent/record/index",
+    "pages/parent/mine/index",
+    "pages/parent/fee/index",
+    "pages/parent/child/index"
+  ],
+  "subpackages": [
+    {
+      "root": "packageParent",
+      "pages": [
+        "pages/home/home",
+        "pages/child/child",
+        "pages/order/order",
+        "pages/sign/sign",
+        "pages/records/index",
+        "pages/homework/index",
+        "pages/fee/index",
+        "pages/child/index",
+        "pages/mine/index"
+      ]
+    },
+    {
+      "root": "packageTeacher",
+      "pages": [
+        "pages/record/index",
+        "pages/students/index"
+      ]
+    }
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "DayUp",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/homework/index",
+        "text": "作业"
+      },
+      {
+        "pagePath": "pages/students/index",
+        "text": "学生"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的"
+      },
+      {
+        "pagePath": "pages/parent/homework/index",
+        "text": "作业"
+      },
+
+      {
+        "pagePath": "pages/parent/mine/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {},
+  "lazyCodeLoading": "requiredComponents"
+}

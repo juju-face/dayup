@@ -1,0 +1,85 @@
+<!-- packageParent/pages/add-child/add-child.wxml -->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-title">添加孩子信息</view>
+  
+  <!-- 头像上传 -->
+  <view class="form-group">
+    <view class="group-title">基本信息</view>
+    <view class="avatar-upload">
+      <view class="avatar-preview" bindtap="chooseAvatar">
+        <image wx:if="{{ avatarUrl }}" src="{{ avatarUrl }}" mode="aspectFill"></image>
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-text">点击上传</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 表单内容 -->
+  <view class="form-group">
+    <view class="form-item">
+      <view class="label">孩子姓名 <text class="required">*</text></view>
+      <input class="input" placeholder="请输入孩子姓名（最多10字）" maxlength="10" bindinput="handleNameInput"></input>
+      <view wx:if="{{ errors.name }}" class="error-message">
+        <text class="error-icon">⚠️</text>
+        <text>{{ errors.name }}</text>
+      </view>
+    </view>
+    
+    <view class="form-item">
+      <view class="label">性别 <text class="required">*</text></view>
+      <view class="radio-group">
+        <view class="radio-item" bindtap="handleGenderChange" data-gender="男">
+          <view class="radio {{ gender === '男' ? 'radio-checked' : '' }}">
+            <view wx:if="{{ gender === '男' }}" class="radio-inner"></view>
+          </view>
+          <view class="radio-text">男</view>
+        </view>
+        <view class="radio-item" bindtap="handleGenderChange" data-gender="女">
+          <view class="radio {{ gender === '女' ? 'radio-checked' : '' }}">
+            <view wx:if="{{ gender === '女' }}" class="radio-inner"></view>
+          </view>
+          <view class="radio-text">女</view>
+        </view>
+      </view>
+      <view wx:if="{{ errors.gender }}" class="error-message">
+        <text class="error-icon">⚠️</text>
+        <text>{{ errors.gender }}</text>
+      </view>
+    </view>
+    
+    <view class="form-item">
+      <view class="label">年龄 <text class="required">*</text></view>
+      <input class="input" type="number" placeholder="请输入年龄（1-18岁）" bindinput="handleAgeInput"></input>
+      <view wx:if="{{ errors.age }}" class="error-message">
+        <text class="error-icon">⚠️</text>
+        <text>{{ errors.age }}</text>
+      </view>
+    </view>
+    
+    <view class="form-item">
+      <view class="label">就读学校</view>
+      <input class="input" placeholder="请输入就读学校" bindinput="handleSchoolInput"></input>
+    </view>
+    
+    <view class="form-item">
+      <view class="label">家长联系电话 <text class="required">*</text></view>
+      <input class="input" type="number" placeholder="请输入手机号" bindinput="handlePhoneInput"></input>
+      <view wx:if="{{ errors.phone }}" class="error-message">
+        <text class="error-icon">⚠️</text>
+        <text>{{ errors.phone }}</text>
+      </view>
+    </view>
+    
+    <view class="form-item">
+      <view class="label">过敏/特殊注意事项</view>
+      <textarea class="textarea" placeholder="请输入过敏或特殊注意事项（选填）" bindinput="handleAllergiesInput"></textarea>
+    </view>
+  </view>
+  
+  <!-- 保存按钮 -->
+  <view class="save-button safe-area-bottom" bindtap="saveChildInfo">
+    保存
+  </view>
+</view>

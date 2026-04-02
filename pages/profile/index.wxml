@@ -1,0 +1,197 @@
+<view class="profile-container">
+  <!-- 老师信息卡片 -->
+  <view class="teacher-card">
+    <view class="teacher-avatar">
+      <text class="avatar-text">{{teacherInfo.avatarText}}</text>
+    </view>
+    <view class="teacher-info">
+      <text class="teacher-name">{{teacherInfo.name}}</text>
+      <text class="teacher-school">{{teacherInfo.school}}</text>
+    </view>
+    <view class="teacher-actions" bindtap="editProfile">
+      <text class="edit-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 头像选择弹窗 -->
+  <view class="avatar-modal" wx:if="{{showAvatarModal}}" catchtouchmove="preventScroll">
+    <view class="modal-overlay" bindtap="hideAvatarModal" catchtouchmove="preventScroll"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">选择头像</text>
+        <text class="modal-close" bindtap="hideAvatarModal">×</text>
+      </view>
+      <view class="avatar-grid">
+        <view wx:for="{{avatarChoices}}" wx:key="index" 
+              class="avatar-item {{selectedAvatar === index ? 'selected' : ''}}"
+              bindtap="selectAvatar" data-index="{{index}}">
+          <text class="avatar-emoji">{{item}}</text>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button type="default" class="cancel-button" bindtap="hideAvatarModal">取消</button>
+        <button type="primary" class="confirm-button" bindtap="confirmAvatar">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日概览卡片 -->
+  <view class="overview-card" animation="{{cardAnimation}}">
+    <view class="card-header">
+      <view class="header-left">
+        <text class="header-icon">📊</text>
+        <text class="header-title">今日待完成工作</text>
+      </view>
+
+    </view>
+    <view class="overview-grid">
+      <view class="overview-item" bindtap="showModificationModal">
+        <text class="overview-number blue">{{todayData.modificationCount}}</text>
+        <text class="overview-label">待修改</text>
+      </view>
+      <view class="overview-item" bindtap="showCorrectionModal">
+        <text class="overview-number red {{todayData.correctionCount > 0 ? 'pulse' : ''}}">{{todayData.correctionCount}}</text>
+        <text class="overview-label">待订正</text>
+      </view>
+    </view>
+
+    <!-- 待修改模态框 -->
+    <view class="task-modal" wx:if="{{showModificationModal}}" catchtouchmove="preventScroll">
+      <view class="modal-overlay" bindtap="hideModificationModal" catchtouchmove="preventScroll"></view>
+      <view class="modal-content">
+        <view class="modal-header">
+          <text class="modal-title">待修改作业</text>
+          <text class="modal-close" bindtap="hideModificationModal">×</text>
+        </view>
+        <view class="modal-body">
+          <view wx:for="{{modificationTasks}}" wx:key="index" class="task-item">
+            <view class="task-student-info">
+              <text class="student-name">{{item.studentName}}</text>
+              <text class="student-class">{{item.studentClass}}</text>
+            </view>
+            <view class="task-content">
+              <text class="task-title">{{item.taskTitle}}</text>
+              <text class="task-submit-time">提交时间: {{item.submitTime}}</text>
+              <text class="task-description">{{item.description}}</text>
+            </view>
+            <view class="task-actions">
+              <button type="default" size="mini" class="correct-button" bindtap="correctTask" data-index="{{index}}" data-type="modification">订正</button>
+              <button type="primary" size="mini" bindtap="completeTask" data-index="{{index}}" data-type="modification">完成</button>
+            </view>
+          </view>
+        </view>
+        <view class="modal-footer">
+          <button type="default" class="cancel-button" bindtap="hideModificationModal">关闭</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 待订正模态框 -->
+    <view class="task-modal" wx:if="{{showCorrectionModal}}" catchtouchmove="preventScroll">
+      <view class="modal-overlay" bindtap="hideCorrectionModal" catchtouchmove="preventScroll"></view>
+      <view class="modal-content">
+        <view class="modal-header">
+          <text class="modal-title">待订正作业</text>
+          <text class="modal-close" bindtap="hideCorrectionModal">×</text>
+        </view>
+        <view class="modal-body">
+          <view wx:for="{{correctionTasks}}" wx:key="index" class="task-item">
+            <view class="task-student-info">
+              <text class="student-name">{{item.studentName}}</text>
+              <text class="student-class">{{item.studentClass}}</text>
+            </view>
+            <view class="task-content">
+              <text class="task-title">{{item.taskTitle}}</text>
+              <text class="task-submit-time">提交时间: {{item.submitTime}}</text>
+              <text class="task-description">{{item.description}}</text>
+            </view>
+            <view class="task-actions">
+              <button type="primary" size="mini" bindtap="completeTask" data-index="{{index}}" data-type="correction">完成</button>
+            </view>
+          </view>
+        </view>
+        <view class="modal-footer">
+          <button type="default" class="cancel-button" bindtap="hideCorrectionModal">关闭</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 作业编辑模态框 -->
+    <view class="task-modal" wx:if="{{showEditTaskModal}}" catchtouchmove="preventScroll">
+      <view class="modal-overlay" bindtap="hideEditTaskModal" catchtouchmove="preventScroll"></view>
+      <view class="modal-content">
+        <view class="modal-header">
+          <text class="modal-title">修改作业</text>
+          <text class="modal-close" bindtap="hideEditTaskModal">×</text>
+        </view>
+        <view class="modal-body">
+          <view class="form-item">
+            <text class="label">学生姓名</text>
+            <text class="value">{{currentTask.studentName}}</text>
+          </view>
+          <view class="form-item">
+            <text class="label">班级</text>
+            <text class="value">{{currentTask.studentClass}}</text>
+          </view>
+          <view class="form-item">
+            <text class="label">作业标题</text>
+            <text class="value">{{currentTask.taskTitle}}</text>
+          </view>
+          <view class="form-item">
+            <text class="label">作业内容</text>
+            <textarea class="textarea" value="{{currentTask.description}}" bindinput="updateTaskDescription"></textarea>
+          </view>
+        </view>
+        <view class="modal-footer">
+          <button type="default" class="cancel-button" bindtap="hideEditTaskModal">取消</button>
+          <button type="primary" class="confirm-button" bindtap="saveTask">保存</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 效率工具区 -->
+  <view class="tools-card">
+    <view class="card-header">
+      <view class="header-left">
+        <text class="header-icon">⚡</text>
+        <text class="header-title">效率工具</text>
+      </view>
+    </view>
+    <view class="tools-grid">
+      <view class="tool-item" bindtap="toolClick" data-type="template">
+        <view class="tool-icon blue-gradient">
+          <text class="icon">📋</text>
+        </view>
+        <text class="tool-label">模板录入</text>
+      </view>
+      <view class="tool-item" bindtap="toolClick" data-type="copy">
+        <view class="tool-icon purple-gradient">
+          <text class="icon">📄</text>
+        </view>
+        <text class="tool-label">复制昨日</text>
+      </view>
+      <view class="tool-item" bindtap="toolClick" data-type="batch">
+        <view class="tool-icon cyan-gradient">
+          <text class="icon">📊</text>
+        </view>
+        <text class="tool-label">批量录入</text>
+      </view>
+      <view class="tool-item" bindtap="settingAction" data-type="exportAll">
+        <view class="tool-icon orange-gradient">
+          <text class="icon">📤</text>
+        </view>
+        <text class="tool-label">导出数据</text>
+      </view>
+    </view>
+  </view>
+
+
+
+
+
+  <!-- 底部安全区 -->
+  <view class="footer">
+    <text class="version">V 1.0.0 · 本地测试版</text>
+  </view>
+</view>

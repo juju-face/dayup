@@ -1,0 +1,45 @@
+<!-- pages/parent/today/index.wxml -->
+<view class="container">
+  <!-- 孩子信息卡 -->
+  <view class="child-card">
+    <view class="child-avatar">
+      <text class="avatar-text">{{boundStudent.name ? boundStudent.name[0] : '?'}}</text>
+    </view>
+    <view class="child-info">
+      <text class="child-name">{{boundStudent.name || '未绑定'}}</text>
+      <text class="child-class">{{boundStudent.grade || ''}}年级{{boundStudent.class || ''}}班</text>
+    </view>
+    <view wx:if="{{children.length > 1}}" class="switch-btn" bindtap="switchChild">
+      <text class="switch-text">切换</text>
+    </view>
+  </view>
+
+  <!-- 日期显示 -->
+  <view class="date-section">
+    <text class="today-date">{{todayDate}}</text>
+  </view>
+
+  <!-- 作业列表 -->
+  <view class="homework-list">
+    <view wx:if="{{homework.length === 0}}" class="empty-state">
+      <text class="empty-icon">📚</text>
+      <text class="empty-text">今日暂无作业</text>
+      <view class="empty-btn" bindtap="viewHistory">查看历史</view>
+    </view>
+
+    <view wx:for="{{homework}}" wx:key="id" class="homework-item">
+      <view class="homework-header">
+        <view class="subject-tag subject-{{item.subject}}">{{item.subject}}</view>
+        <view class="status-badge status-{{item.status}}">
+          <text wx:if="{{item.status === 1}}">✓</text>
+          <text wx:elif="{{item.status === 0}}">○</text>
+          <text wx:else>⚠</text>
+        </view>
+      </view>
+      <view class="homework-content">{{item.content}}</view>
+      <view wx:if="{{item.remark}}" class="homework-remark">
+        评语：{{item.remark}}
+      </view>
+    </view>
+  </view>
+</view>

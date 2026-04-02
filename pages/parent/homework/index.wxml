@@ -1,0 +1,63 @@
+<view class="container">
+  <!-- 顶部：孩子姓名 + 今日日期 -->
+  <view class="header">
+    <view class="child-info">
+      <text class="child-name">{{currentChild ? currentChild.name : '未绑定'}}</text>
+      <text class="today-date">{{formattedDate}}</text>
+    </view>
+  </view>
+
+  <!-- 完成情况统计 -->
+  <view class="stats-section" wx:if="{{homework.length > 0}}">
+    <view class="stat-item">
+      <text class="stat-num">{{stats.completed}}</text>
+      <text class="stat-label">已完成</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num pending">{{stats.pending}}</text>
+      <text class="stat-label">未完成</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num warning">{{stats.needCorrection}}</text>
+      <text class="stat-label">待订正</text>
+    </view>
+  </view>
+
+  <!-- 今日作业卡片 -->
+  <view class="homework-card">
+    <view class="card-header">
+      <text class="card-title">今日作业</text>
+      <text class="card-count" wx:if="{{homework.length > 0}}">共 {{homework.length}} 项</text>
+    </view>
+    
+    <view wx:if="{{homework.length === 0}}" class="empty-state">
+      <text class="empty-icon">📚</text>
+      <text class="empty-text">今日暂无作业</text>
+      <text class="empty-tip">老师还没有布置作业哦</text>
+    </view>
+    
+    <view wx:for="{{homework}}" wx:key="id" class="homework-item">
+      <view class="item-left">
+        <text class="subject-tag subject-{{item.subject}}">{{item.subjectName}}</text>
+      </view>
+      <view class="item-center">
+        <text class="homework-content">{{item.content}}</text>
+      </view>
+      <view class="item-right">
+        <text class="status-icon status-{{item.status}}">
+          {{item.status === 1 ? '✓' : item.status === 2 ? '⚠' : '○'}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{isLoading}}" class="loading-state">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 实时同步提示 -->
+  <view class="sync-tip" wx:if="{{!isLoading && homework.length > 0}}">
+    <text class="sync-text">🔄 实时同步中</text>
+  </view>
+</view>

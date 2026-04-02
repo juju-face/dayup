@@ -1,0 +1,175 @@
+<!-- packageTeacher/pages/check-records/index.wxml -->
+<view class="page" data-role="teacher">
+  <!-- 顶部 Segmented Control -->
+  <view class="segmented-control">
+    <view class="segment-item {{ currentTab === 'today' ? 'segment-active' : '' }}" bindtap="switchTab" data-tab="today">
+      今日记录
+    </view>
+    <view class="segment-item {{ currentTab === 'makeup' ? 'segment-active' : '' }}" bindtap="switchTab" data-tab="makeup">
+      补签管理
+    </view>
+    <view class="segment-item {{ currentTab === 'query' ? 'segment-active' : '' }}" bindtap="switchTab" data-tab="query">
+      数据查询
+    </view>
+  </view>
+
+  <!-- 今日记录面板 -->
+  <view wx:if="{{ currentTab === 'today' }}" class="panel today-panel">
+    <!-- 顶部统计行 -->
+    <view class="today-stats">
+      <view class="today-stat-item">
+        <text class="today-stat-label">应到</text>
+        <text class="today-stat-value">{{ todayStats.expected }}</text>
+      </view>
+      <view class="today-stat-item">
+        <text class="today-stat-label">实到</text>
+        <text class="today-stat-value">{{ todayStats.actual }}</text>
+      </view>
+      <view class="today-stat-item">
+        <text class="today-stat-label">签退完毕</text>
+        <text class="today-stat-value">{{ todayStats.checkedOut }}</text>
+      </view>
+      <view class="today-stat-item">
+        <text class="today-stat-label">未签退</text>
+        <text class="today-stat-value" style="color: #FF4D4F;">{{ todayStats.pendingCheckOut }}</text>
+      </view>
+    </view>
+
+    <!-- 记录列表 -->
+    <scroll-view class="records-list" scroll-y="true" style="height: calc(100vh - 80rpx - 100rpx - 120rpx - env(safe-area-inset-bottom));">
+      <block wx:for="{{ todayRecords }}" wx:key="{{ item.id }}">
+        <view class="record-item" bindlongpress="showRecordMenu" data-record="{{ item }}">
+          <view class="record-avatar">
+            <image src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+          </view>
+          <view class="record-info">
+            <view class="record-name t-body">{{ item.childName }}</view>
+            <view class="record-time-slot t-caption">{{ item.timeSlotName }}</view>
+          </view>
+          <view class="record-time">
+            <text wx:if="{{ item.checkOutTime }}" class="time-text">{{ item.checkOutTime }}</text>
+            <text wx:else class="status-tag status-pending">未签退</text>
+          </view>
+          <view class="record-status">
+            <view class="status-dot {{ item.checkOutTime ? 'status-green' : 'status-orange' }}"></view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 空状态 -->
+      <view wx:if="{{ todayRecords.length === 0 }}" class="empty-container">
+        <empty-state text="今日暂无签到记录" icon="📋"></empty-state>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 补签管理面板 -->
+  <view wx:if="{{ currentTab === 'makeup' }}" class="panel makeup-panel">
+    <scroll-view class="makeup-form" scroll-y="true" style="height: calc(100vh - 80rpx - 100rpx - env(safe-area-inset-bottom));">
+      <!-- 步骤1：日期选择 -->
+      <view class="form-step">
+        <view class="step-title t-h3">步骤1：选择日期</view>
+        <picker mode="date" value="{{ makeupForm.date }}" bindchange="bindMakeupDateChange">
+          <view class="picker-value">{{ makeupForm.date }}</view>
+        </picker>
+      </view>
+
+      <!-- 步骤2：时段选择 -->
+      <view class="form-step">
+        <view class="step-title t-h3">步骤2：选择时段</view>
+        <picker bindchange="bindMakeupTimeSlotChange" value="{{ makeupForm.timeSlotIndex }}" range="{{ timeSlotOptions }}" range-key="name">
+          <view class="picker-value">{{ makeupForm.timeSlotName || '请选择时段' }}</view>
+        </picker>
+      </view>
+
+      <!-- 步骤3：学生选择 -->
+      <view class="form-step">
+        <view class="step-title t-h3">步骤3：选择学生</view>
+        <view wx:if="{{ makeupStudents.length > 0 }}" class="student-selection">
+          <view wx:for="{{ makeupStudents }}" wx:key="{{ item.id }}" class="student-option {{ item.selected ? 'selected' : '' }}" bindtap="toggleStudentSelection" data-index="{{ index }}">
+            <image class="student-option-avatar" src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+            <text class="student-option-name">{{ item.name }}</text>
+            <view wx:if="{{ item.selected }}" class="selected-mark">✓</view>
+          </view>
+        </view>
+        <view wx:else class="empty-selection">
+          <text class="t-caption">请先选择时段</text>
+        </view>
+      </view>
+
+      <!-- 步骤4：时间输入 -->
+      <view class="form-step">
+        <view class="step-title t-h3">步骤4：输入时间</view>
+        <input type="text" value="{{ makeupForm.time }}" placeholder="14:30" maxlength="5" bindinput="bindMakeupTimeInput" class="time-input"/>
+      </view>
+
+      <!-- 提交按钮 -->
+      <button class="submit-btn teacher-btn-primary" bindtap="submitMakeup">提交补签</button>
+    </scroll-view>
+  </view>
+
+  <!-- 数据查询面板 -->
+  <view wx:if="{{ currentTab === 'query' }}" class="panel query-panel">
+    <!-- 筛选器 -->
+    <view class="query-filters">
+      <view class="filter-row">
+        <picker mode="date" value="{{ queryForm.startDate }}" bindchange="bindQueryStartDateChange">
+          <view class="filter-picker">{{ queryForm.startDate }}</view>
+        </picker>
+        <text class="filter-separator">至</text>
+        <picker mode="date" value="{{ queryForm.endDate }}" bindchange="bindQueryEndDateChange">
+          <view class="filter-picker">{{ queryForm.endDate }}</view>
+        </picker>
+      </view>
+      <view class="filter-row">
+        <text class="filter-label">时段：</text>
+        <checkbox-group bindchange="bindQueryTimeSlotsChange">
+          <label wx:for="{{ timeSlotOptions }}" wx:key="{{ item.id }}" class="checkbox-label">
+            <checkbox value="{{ item.id }}" checked="{{ item.checked }}"/>{{ item.name }}
+          </label>
+        </checkbox-group>
+      </view>
+      <view class="filter-row">
+        <text class="filter-label">状态：</text>
+        <radio-group bindchange="bindQueryStatusChange">
+          <label class="radio-label"><radio value="all" checked="{{ queryForm.status === 'all' }}"/>全部</label>
+          <label class="radio-label"><radio value="checkedIn" checked="{{ queryForm.status === 'checkedIn' }}"/>已签到</label>
+          <label class="radio-label"><radio value="notCheckedIn" checked="{{ queryForm.status === 'notCheckedIn' }}"/>未签到</label>
+        </radio-group>
+      </view>
+      <button class="query-btn" bindtap="executeQuery">查询</button>
+      <button class="export-btn" bindtap="exportData">导出数据</button>
+    </view>
+
+    <!-- 查询结果列表 -->
+    <scroll-view class="query-results" scroll-y="true" bindscrolltolower="loadMoreQueryResults" style="height: calc(100vh - 80rpx - 100rpx - 300rpx - env(safe-area-inset-bottom));">
+      <block wx:for="{{ queryResults }}" wx:key="{{ item.id }}">
+        <view class="record-item">
+          <view class="record-avatar">
+            <image src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+          </view>
+          <view class="record-info">
+            <view class="record-name t-body">{{ item.childName }}</view>
+            <view class="record-time-slot t-caption">{{ item.timeSlotName }}</view>
+          </view>
+          <view class="record-time">
+            <text class="time-text">{{ item.checkTime }}</text>
+          </view>
+          <view class="record-status">
+            <view class="status-dot {{ item.type === 'checkOut' ? 'status-green' : 'status-orange' }}"></view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 加载更多 -->
+      <view wx:if="{{ queryLoading }}" class="loading-more">
+        <text>加载中...</text>
+      </view>
+
+      <!-- 空状态 -->
+      <view wx:if="{{ queryResults.length === 0 && !queryLoading }}" class="empty-container">
+        <empty-state text="暂无查询结果" icon="🔍"></empty-state>
+      </view>
+    </scroll-view>
+  </view>
+</view>

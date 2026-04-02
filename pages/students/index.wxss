@@ -1,0 +1,418 @@
+/* pages/students/index.wxss */
+
+.container {
+  min-height: 100vh;
+  background: #F5F7FA;
+  padding: 24rpx;
+  padding-bottom: 160rpx;
+}
+
+/* 顶部：标题 + 统计 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+  gap: 16rpx;
+}
+
+.add-btn {
+  background: #1890FF;
+  padding: 16rpx 24rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.add-text {
+  font-size: 30rpx;
+  color: white;
+  font-weight: 500;
+}
+
+
+
+.filter-btn {
+  background: white;
+  padding: 16rpx 24rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-text {
+  font-size: 30rpx;
+  color: #1890FF;
+  font-weight: 500;
+}
+
+/* 底部学生统计 */
+.student-count-bottom {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-top: 32rpx;
+  padding: 0;
+}
+
+.student-count-bottom .count-number {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8rpx;
+}
+
+.student-count-bottom .count-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+
+
+/* 学生列表 */
+.student-list {
+  padding-bottom: 24rpx;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.empty-tip {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.empty-action {
+  margin-top: 32rpx;
+}
+
+.action-btn {
+  padding: 16rpx 48rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.action-btn.primary {
+  background: #1890FF;
+  color: white;
+}
+
+/* 学生卡片 */
+.student-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+/* 学生内容 */
+.student-content {
+  flex: 1;
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.student-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.student-class {
+  font-size: 24rpx;
+  color: #666;
+  background: #F5F7FA;
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.student-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.detail-item {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+}
+
+.detail-item::before {
+  content: '•';
+  color: #1890FF;
+  margin-right: 12rpx;
+  font-weight: 600;
+  font-size: 28rpx;
+}
+
+.allergy-tag {
+  background: #FFF1F0;
+  color: #FF4D4F;
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  margin-right: 12rpx;
+  font-weight: 500;
+}
+
+/* 更多按钮（三个点） */
+.more-btn {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  padding: 12rpx;
+  z-index: 10;
+}
+
+.more-dots {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  align-items: center;
+}
+
+.dot {
+  width: 8rpx;
+  height: 8rpx;
+  background: #999;
+  border-radius: 50%;
+}
+
+.more-btn:active .dot {
+  background: #666;
+}
+
+/* 底部操作栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 100rpx;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx 24rpx;
+  border-top: 1rpx solid #EEE;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 99;
+  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.selected-count {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.batch-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.batch-btn {
+  padding: 12rpx 24rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  border: 1rpx solid #1890FF;
+  color: #1890FF;
+}
+
+.batch-btn.danger {
+  border-color: #FF4D4F;
+  color: #FF4D4F;
+}
+
+
+
+/* 筛选弹窗 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  width: 100%;
+  max-height: 80vh;
+  background: white;
+  border-radius: 32rpx 32rpx 0 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.modal-header {
+  padding: 40rpx;
+  padding-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 48rpx;
+  color: #999;
+}
+
+.modal-body {
+  padding: 40rpx;
+  padding-top: 30rpx;
+  flex: 1;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.filter-section {
+  margin-bottom: 32rpx;
+}
+
+.filter-label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.filter-option {
+  padding: 16rpx 32rpx;
+  border: 2rpx solid #E8E8E8;
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  color: #666;
+  cursor: pointer;
+  background: white;
+}
+
+.filter-option.active {
+  background: #1890FF;
+  color: white;
+  border-color: #1890FF;
+}
+
+/* 底部固定按钮栏 */
+.modal-footer {
+  padding: 30rpx 40rpx;
+  background: white;
+  border-top: 1rpx solid #EEE;
+  box-sizing: border-box;
+  display: flex;
+  gap: 16rpx;
+}
+
+.footer-btn {
+  flex: 1;
+  height: 72rpx;
+  border-radius: 36rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 72rpx;
+  border: 1rpx solid #E8E8E8;
+  color: #666;
+  background: white;
+}
+
+.footer-btn.primary {
+  background: #1890FF;
+  color: white;
+  border-color: #1890FF;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .container {
+    padding: 16rpx;
+  }
+  
+  .title {
+    font-size: 32rpx;
+  }
+  
+  .student-card {
+    padding: 20rpx;
+  }
+  
+  .student-avatar {
+    width: 72rpx;
+    height: 72rpx;
+  }
+  
+  .avatar-text {
+    font-size: 32rpx;
+  }
+  
+  .add-student-btn {
+    width: 88rpx;
+    height: 88rpx;
+    right: 24rpx;
+    bottom: 140rpx;
+  }
+  
+  .add-icon {
+    font-size: 44rpx;
+  }
+  
+  .search-input {
+    padding: 16rpx 72rpx 16rpx 32rpx;
+  }
+  
+  .modal-body {
+    padding: 32rpx;
+  }
+}
+

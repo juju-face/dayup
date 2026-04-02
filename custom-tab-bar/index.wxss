@@ -1,0 +1,102 @@
+/* custom-tab-bar/index.wxss */
+
+/* 容器样式 - 背景白色，高度100rpx */
+.tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: white !important;
+  background-color: #FFFFFF !important;
+  border-top: 1rpx solid #EEEEEE;
+  height: 100rpx !important;
+  min-height: 100rpx !important;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+}
+
+/* Tab项样式 */
+.tab-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  position: relative;
+  padding-top: 10rpx !important;
+}
+
+/* 图标容器 */
+.icon-wrapper {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: 8rpx;
+  transition: transform 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-active {
+  transform: scale(1.1);
+}
+
+/* 文字图标样式 */
+.icon-text {
+  font-size: 40rpx;
+  line-height: 1;
+}
+
+/* 文字样式 - 22rpx */
+.text {
+  font-size: 22rpx !important;
+  color: #999999;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.text-active {
+  font-weight: 600;
+}
+
+/* 家长端选中颜色 - 暖橙 #FF7A45 */
+.role-parent .text-active {
+  color: #FF7A45 !important;
+}
+
+/* 老师端选中颜色 - 冷蓝 #1890FF */
+.role-teacher .text-active {
+  color: #1890FF !important;
+}
+
+/* 徽章提示 */
+.badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  background-color: #FF4D4F;
+  color: white;
+  font-size: 20rpx;
+  font-weight: 600;
+  min-width: 32rpx;
+  height: 32rpx;
+  line-height: 32rpx;
+  text-align: center;
+  border-radius: 16rpx;
+  padding: 0 8rpx;
+  z-index: 10;
+}
+
+/* 安全区适配 */
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  height: calc(100rpx + env(safe-area-inset-bottom)) !important;
+  min-height: calc(100rpx + env(safe-area-inset-bottom)) !important;
+}

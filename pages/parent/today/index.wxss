@@ -1,0 +1,194 @@
+/* pages/parent/today/index.wxss */
+.container {
+  min-height: 100vh;
+  background: #FFF8F0;
+  padding: 32rpx;
+}
+
+/* 孩子信息卡 */
+.child-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(255, 122, 69, 0.1);
+}
+
+.child-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF7A45 0%, #FF9500 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.avatar-text {
+  font-size: 36rpx;
+  color: white;
+  font-weight: bold;
+}
+
+.child-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.child-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1A1A1A;
+}
+
+.child-class {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.switch-btn {
+  padding: 12rpx 24rpx;
+  background: #FFF0E6;
+  border-radius: 12rpx;
+  border: 1rpx solid #FF7A45;
+}
+
+.switch-text {
+  font-size: 24rpx;
+  color: #FF7A45;
+  font-weight: 500;
+}
+
+/* 日期显示 */
+.date-section {
+  margin-bottom: 32rpx;
+  padding-left: 8rpx;
+}
+
+.today-date {
+  font-size: 28rpx;
+  color: #FF7A45;
+  font-weight: 500;
+}
+
+/* 作业列表 */
+.homework-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #999;
+  margin-bottom: 32rpx;
+}
+
+.empty-btn {
+  padding: 20rpx 48rpx;
+  background: #FF7A45;
+  color: white;
+  font-size: 28rpx;
+  border-radius: 12rpx;
+  font-weight: 500;
+}
+
+.homework-item {
+  background: white;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.homework-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.subject-tag {
+  padding: 8rpx 20rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.subject-chinese {
+  background: #E6F7FF;
+  color: #1890FF;
+}
+
+.subject-math {
+  background: #FFF1F0;
+  color: #FF4D4F;
+}
+
+.subject-english {
+  background: #F6FFED;
+  color: #52C41A;
+}
+
+.subject-other {
+  background: #F5F5F5;
+  color: #666;
+}
+
+.status-badge {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.status-0 {
+  background: #F5F5F5;
+  color: #999;
+}
+
+.status-1 {
+  background: #F6FFED;
+  color: #52C41A;
+}
+
+.status-2 {
+  background: #FFF7E6;
+  color: #FAAD14;
+}
+
+.homework-content {
+  font-size: 30rpx;
+  color: #1A1A1A;
+  line-height: 1.6;
+}
+
+.homework-remark {
+  margin-top: 20rpx;
+  padding: 16rpx 20rpx;
+  background: #FFF8F0;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  color: #666;
+  border-left: 4rpx solid #FF7A45;
+}

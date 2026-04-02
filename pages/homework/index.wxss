@@ -1,0 +1,316 @@
+/* pages/homework/index.wxss */
+
+.container {
+  min-height: 100vh;
+  background: #F5F7FA;
+  padding: 24rpx;
+  padding-bottom: 160rpx;
+}
+
+/* 顶部：日期选择器 + 刷新按钮 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.date-picker {
+  background: white;
+  padding: 16rpx 24rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.date-text {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 作业录入按钮 */
+.add-btn {
+  background: #1890FF;
+  padding: 16rpx 24rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.add-text {
+  font-size: 30rpx;
+  color: white;
+  font-weight: 500;
+}
+
+
+
+/* 统计卡片 */
+.stats-card {
+  display: flex;
+  background: white;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-num {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 作业列表 */
+.record-list {
+  padding-bottom: 24rpx;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.empty-tip {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.record-card {
+  background: white;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.student-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.subject-tag {
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+}
+
+/* 科目标签颜色 */
+.subject-tag[data-subject="语文"] {
+  background: #FFF1F0;
+  color: #FF4D4F;
+}
+
+.subject-tag[data-subject="数学"] {
+  background: #E6F7FF;
+  color: #1890FF;
+}
+
+.subject-tag[data-subject="英语"] {
+  background: #F6FFED;
+  color: #52C41A;
+}
+
+.subject-tag[data-subject="其他"] {
+  background: #F5F5F5;
+  color: #666;
+}
+
+.record-content {
+  margin-bottom: 16rpx;
+}
+
+.content-text {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+.record-footer {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.status-picker {
+  flex: 1;
+}
+
+.status-picker-value {
+  padding: 12rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  display: inline-block;
+}
+
+/* 状态颜色 */
+.status-0 {
+  background: #FFF1F0;
+  color: #FF4D4F;
+}
+
+.status-1 {
+  background: #F6FFED;
+  color: #52C41A;
+}
+
+.status-2 {
+  background: #FFF7E6;
+  color: #FAAD14;
+}
+
+.delete-btn {
+  padding: 12rpx 24rpx;
+  background: #F5F5F5;
+  color: #999;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+}
+
+
+
+/* 弹窗 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  width: 100%;
+  max-height: 80vh;
+  background: white;
+  border-radius: 32rpx 32rpx 0 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.modal-header {
+  padding: 40rpx;
+  padding-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.modal-close {
+  font-size: 48rpx;
+  color: #999;
+}
+
+.modal-body {
+  padding: 40rpx;
+  padding-top: 30rpx;
+  flex: 1;
+  overflow-y: auto;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+.form-item {
+  margin-bottom: 24rpx;
+}
+
+.label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+input, .picker-value {
+  background: #F5F7FA;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+}
+
+/* 科目标签选择 */
+.subject-tags {
+  display: flex;
+  gap: 16rpx;
+  flex-wrap: wrap;
+}
+
+.subject-tag {
+  padding: 16rpx 32rpx;
+  border: 2rpx solid #E8E8E8;
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  color: #666;
+  background: white;
+}
+
+.subject-tag.active {
+  background: #1890FF;
+  color: white;
+  border-color: #1890FF;
+}
+
+/* 底部固定按钮栏 */
+.modal-footer {
+  padding: 30rpx 40rpx;
+  background: white;
+  border-top: 1rpx solid #EEE;
+  box-sizing: border-box;
+}
+
+.confirm-btn {
+  width: 100%;
+  height: 72rpx;
+  background: #1890FF;
+  color: white;
+  font-size: 28rpx;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 72rpx;
+}

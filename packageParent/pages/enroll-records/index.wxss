@@ -1,0 +1,186 @@
+/* packageParent/pages/enroll-records/index.wxss */
+
+.container {
+  min-height: 100vh;
+  background-color: var(--bg-gray);
+  padding: 20rpx;
+}
+
+/* 筛选标签 */
+.filter-tabs {
+  display: flex;
+  background-color: var(--white);
+  border-radius: 12rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.filter-tab {
+  flex: 1;
+  padding: 16rpx;
+  text-align: center;
+  font-size: 16rpx;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.filter-tab.active {
+  background-color: var(--primary-color);
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* 记录列表 */
+.records-list {
+  min-height: 600rpx;
+}
+
+.record-item {
+  background-color: var(--white);
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 孩子信息 */
+.child-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.child-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 16rpx;
+}
+
+.child-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.child-details {
+  flex: 1;
+}
+
+.child-name {
+  font-size: 18rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4rpx;
+}
+
+.enroll-time {
+  font-size: 12rpx;
+  color: var(--text-secondary);
+}
+
+/* 时段信息 */
+.time-slot-info {
+  margin-bottom: 16rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.time-slot-name {
+  font-size: 16rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4rpx;
+}
+
+.time-slot-range {
+  font-size: 14rpx;
+  color: var(--text-secondary);
+}
+
+/* 状态和操作 */
+.record-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-tag {
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 14rpx;
+  font-weight: 500;
+}
+
+.status-tag.pending {
+  background-color: #FFF8E1;
+  color: #FF9800;
+}
+
+.status-tag.checkedIn {
+  background-color: #E8FFF0;
+  color: #33CC66;
+}
+
+.status-tag.completed {
+  background-color: #E3F2FD;
+  color: #2196F3;
+}
+
+.status-tag.cancelled {
+  background-color: #F5F5F5;
+  color: #9E9E9E;
+}
+
+.actions {
+  display: flex;
+  gap: 12rpx;
+}
+
+.action-btn {
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 14rpx;
+  transition: all 0.3s ease;
+}
+
+.detail-btn {
+  background-color: #F5F5F5;
+  color: var(--text-primary);
+}
+
+.cancel-btn {
+  background-color: #FFE0E0;
+  color: #FF5252;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 20rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 16rpx;
+  color: var(--text-secondary);
+  margin-bottom: 32rpx;
+}
+
+.go-enroll-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  font-size: 16rpx;
+  padding: 16rpx 32rpx;
+  border-radius: 8rpx;
+  text-decoration: none;
+}

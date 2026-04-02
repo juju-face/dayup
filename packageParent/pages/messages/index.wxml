@@ -1,0 +1,45 @@
+<!-- packageParent/pages/messages/index.wxml -->
+<view class="container">
+  <!-- 消息类型筛选 -->
+  <view class="filter-tabs">
+    <view class="tab-item {{currentTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">
+      全部消息
+    </view>
+    <view class="tab-item {{currentTab === 'homework' ? 'active' : ''}}" bindtap="switchTab" data-tab="homework">
+      作业通知
+    </view>
+    <view class="tab-item {{currentTab === 'feedback' ? 'active' : ''}}" bindtap="switchTab" data-tab="feedback">
+      作业反馈
+    </view>
+  </view>
+
+  <!-- 消息列表 -->
+  <view class="message-list">
+    <view wx:if="{{filteredMessages.length === 0}}" class="empty-state">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无消息</text>
+    </view>
+
+    <view wx:for="{{filteredMessages}}" wx:key="id" class="message-card {{item.read ? '' : 'unread'}}">
+      <view class="message-header">
+        <view class="message-type type-{{item.type}}">
+          {{item.type === 'homework' ? '作业' : '反馈'}}
+        </view>
+        <text class="message-time">{{item.time}}</text>
+      </view>
+      <view class="message-title">{{item.title}}</view>
+      <view class="message-content">{{item.content}}</view>
+      <view wx:if="{{item.childName}}" class="message-child">
+        相关孩子：{{item.childName}}
+      </view>
+      <view class="message-actions">
+        <view class="action-btn" bindtap="markAsRead" data-id="{{item.id}}" wx:if="{{!item.read}}">
+          标记已读
+        </view>
+        <view class="action-btn primary" bindtap="viewDetail" data-id="{{item.id}}">
+          查看详情
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

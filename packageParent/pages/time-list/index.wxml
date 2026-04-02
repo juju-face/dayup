@@ -1,0 +1,52 @@
+<!-- packageParent/pages/time-list/index.wxml -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <text class="search-icon">🔍</text>
+      <input placeholder="搜索时段名称" bindinput="handleSearch"></input>
+    </view>
+  </view>
+  
+  <!-- 时段列表 -->
+  <view class="time-list">
+    <block wx:for="{{ filteredTimeSlots }}" wx:key="{{ item.id }}">
+      <view class="time-card {{ item.currentKids >= item.maxKids ? 'time-card-full' : '' }}" bindtap="navigateToBook" data-time-slot-id="{{ item.id }}">
+        <view class="time-card-content">
+          <view class="time-card-header">
+            <view class="time-card-name">{{ item.name }}</view>
+            <view class="time-card-status {{ item.currentKids >= item.maxKids ? 'status-full' : 'status-available' }}">
+              {{ item.currentKids >= item.maxKids ? '已满' : '可报名' }}
+            </view>
+          </view>
+          <view class="time-card-body">
+            <view class="time-card-item">
+              <text class="time-card-label">时间段：</text>
+              <text class="time-card-value">{{ item.timeRange }}</text>
+            </view>
+            <view class="time-card-item">
+              <text class="time-card-label">价格：</text>
+              <text class="time-card-value price">¥<text class="price-number">{{ item.price }}</text>/天</text>
+            </view>
+            <view class="time-card-item">
+              <text class="time-card-label">剩余名额：</text>
+              <text class="time-card-value" style="color: {{ (item.maxKids - item.currentKids) <= 2 ? '#FF4444' : '#52C41A' }}">
+                {{ item.maxKids - item.currentKids }}/{{ item.maxKids }}人
+                <text wx:if="(item.maxKids - item.currentKids) <= 2" class="status-tip">（紧张）</text>
+                <text wx:else class="status-tip">（充足）</text>
+              </text>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{ item.currentKids >= item.maxKids }}" class="time-card-overlay">
+          <text class="overlay-text">名额已满</text>
+        </view>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 空数据提示 -->
+  <view wx:if="{{ filteredTimeSlots.length === 0 }}" class="empty-container">
+    <empty-state text="未找到相关时段" btn-text="重新加载" bind:btnClick="loadTimeSlots"></empty-state>
+  </view>
+</view>

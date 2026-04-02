@@ -1,0 +1,4 @@
+<!-- role-badge.wxml -->
+<view class="role-badge {{ role === 'parent' ? 'role-parent' : 'role-teacher' }}">
+  {{ role === 'parent' ? '家长' : '老师' }}
+</view>

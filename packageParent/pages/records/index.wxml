@@ -1,0 +1,108 @@
+<view class="container">
+  <!-- 顶部筛选栏 -->
+  <view class="filter-bar">
+    <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
+      <view class="filter-list">
+        <view class="filter-item {{currentFilter === 'week' ? 'active' : ''}}" data-filter="week" bindtap="switchFilter">
+          本周
+        </view>
+        <view class="filter-item {{currentFilter === 'month' ? 'active' : ''}}" data-filter="month" bindtap="switchFilter">
+          本月
+        </view>
+        <view class="filter-item {{currentFilter === 'semester' ? 'active' : ''}}" data-filter="semester" bindtap="switchFilter">
+          本学期
+        </view>
+        <view class="filter-item {{currentFilter === 'custom' ? 'active' : ''}}" data-filter="custom" bindtap="switchFilter">
+          自定义
+        </view>
+      </view>
+    </scroll-view>
+    <!-- 自定义日期选择器 -->
+    <view class="date-picker" wx:if="{{currentFilter === 'custom'}}">
+      <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+        <view class="date-text">{{startDate || '开始日期'}}</view>
+      </picker>
+      <text class="date-separator">至</text>
+      <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+        <view class="date-text">{{endDate || '结束日期'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-card">
+    <view class="completion-rate">
+      <text class="rate-number">{{stats.completionRate}}</text>
+      <text class="rate-percent">%</text>
+    </view>
+    <view class="rate-label">作业完成率</view>
+    <view class="stats-detail">
+      <view class="detail-item">
+        <text class="detail-label">已完成</text>
+        <text class="detail-number completed">{{stats.completed}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">未完成</text>
+        <text class="detail-number pending">{{stats.pending}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">待订正</text>
+        <text class="detail-number correction">{{stats.correction}}</text>
+      </view>
+    </view>
+    <view class="trend" wx:if="{{stats.trend}}">
+      <text class="trend-text">{{stats.trend}}</text>
+    </view>
+  </view>
+
+  <!-- 可视化图表 - 近7天完成率柱状图 -->
+  <view class="chart-card">
+    <view class="chart-title">近7天完成率趋势</view>
+    <view class="chart-container">
+      <view class="chart-bars">
+        <view class="bar-item" wx:for="{{weeklyData}}" wx:key="day">
+          <view class="bar-wrapper">
+            <view class="bar {{item.rate >= 80 ? 'high' : item.rate >= 50 ? 'medium' : 'low'}}" style="height: {{item.rate}}%;"></view>
+          </view>
+          <text class="bar-label">{{item.day}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史列表 -->
+  <view class="history-section">
+    <view class="section-title">历史作业</view>
+    <view class="history-list">
+      <view class="date-group" wx:for="{{groupedRecords}}" wx:key="date" wx:for-item="group">
+        <!-- 日期组头 -->
+        <view class="group-header" bindtap="toggleGroup" data-date="{{group.date}}">
+          <text class="group-date">{{group.formattedDate}}</text>
+          <text class="group-weekday">{{group.weekday}}</text>
+          <text class="group-count">{{group.records.length}}条</text>
+          <text class="group-arrow {{group.expanded ? 'expanded' : ''}}">▼</text>
+        </view>
+        <!-- 组内列表 -->
+        <view class="group-content {{group.expanded ? 'expanded' : ''}}">
+          <view class="homework-item" wx:for="{{group.records}}" wx:key="id" wx:for-item="record">
+            <view class="item-left">
+              <text class="subject-tag subject-{{record.subject}}">{{record.subjectName}}</text>
+            </view>
+            <view class="item-center">
+              <text class="homework-content">{{record.content}}</text>
+            </view>
+            <view class="item-right">
+              <text class="status-badge status-{{record.status}}">{{record.statusText}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!groupedRecords.length && !loading}}">
+    <text class="empty-icon">📋</text>
+    <text class="empty-text">暂无历史记录</text>
+  </view>
+</view>
