@@ -6,6 +6,45 @@ const teacherStorage = require('./storage.js');
 // 存储键名
 const BOUND_STUDENT_KEY = 'bound_student_id';
 
+// 内存缓存（避免频繁读取本地存储）
+const memoryCache = {
+  boundStudent: null,
+  boundStudentTime: 0,
+  todayRecords: null,
+  todayRecordsTime: 0
+};
+const CACHE_EXPIRE_MS = 3000; // 内存缓存有效期 3 秒
+
+// 获取缓存的学生信息
+function getCachedBoundStudent() {
+  const now = Date.now();
+  if (memoryCache.boundStudent && (now - memoryCache.boundStudentTime) < CACHE_EXPIRE_MS) {
+    return memoryCache.boundStudent;
+  }
+  return null;
+}
+
+// 设置缓存的学生信息
+function setCachedBoundStudent(student) {
+  memoryCache.boundStudent = student;
+  memoryCache.boundStudentTime = Date.now();
+}
+
+// 获取缓存的今日作业
+function getCachedTodayRecords() {
+  const now = Date.now();
+  if (memoryCache.todayRecords && (now - memoryCache.todayRecordsTime) < CACHE_EXPIRE_MS) {
+    return memoryCache.todayRecords;
+  }
+  return null;
+}
+
+// 设置缓存的今日作业
+function setCachedTodayRecords(records) {
+  memoryCache.todayRecords = records;
+  memoryCache.todayRecordsTime = Date.now();
+}
+
 /**
  * 获取今天的日期字符串
  * @returns {string} 格式：YYYY-MM-DD
@@ -78,22 +117,34 @@ function bindStudent(studentId) {
  * @returns {Object|null} 学生信息对象
  */
 function getBoundStudent() {
+  // 先检查内存缓存
+  const cached = getCachedBoundStudent();
+  if (cached) {
+    return cached;
+  }
+  
   try {
+    // 优先从 boundStudent 对象获取
+    const boundStudent = wx.getStorageSync('boundStudent');
+    if (boundStudent && (boundStudent.id || boundStudent._id)) {
+      setCachedBoundStudent(boundStudent);
+      return boundStudent;
+    }
+    
+    // 兼容：从 BOUND_STUDENT_KEY 获取
     const studentId = wx.getStorageSync(BOUND_STUDENT_KEY);
     if (!studentId) {
-      console.log('[parent-storage] 未绑定学生');
       return null;
     }
     
     const students = teacherStorage.getStudents();
-    const student = students.find(s => s.id === studentId);
+    const student = students.find(s => s.id === studentId || s._id === studentId);
     
-    if (!student) {
-      console.error('[parent-storage] 绑定的学生不存在:', studentId);
-      return null;
+    if (student) {
+      setCachedBoundStudent(student);
     }
     
-    return student;
+    return student || null;
   } catch (error) {
     console.error('[parent-storage] 获取绑定学生失败:', error);
     return null;
@@ -105,9 +156,14 @@ function getBoundStudent() {
  * @returns {Array} 今日作业列表
  */
 function getTodayRecords() {
+  // 先检查内存缓存
+  const cached = getCachedTodayRecords();
+  if (cached !== null) {
+    return cached;
+  }
+  
   const student = getBoundStudent();
   if (!student) {
-    console.log('[parent-storage] 未绑定学生，无法获取今日作业');
     return [];
   }
   
@@ -121,7 +177,9 @@ function getTodayRecords() {
   // 按科目排序
   todayRecords.sort((a, b) => a.subject.localeCompare(b.subject));
   
-  console.log('[parent-storage] 获取今日作业:', todayRecords.length, '条');
+  // 设置缓存
+  setCachedTodayRecords(todayRecords);
+  
   return todayRecords;
 }
 

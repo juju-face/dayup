@@ -1,5 +1,10 @@
 <!-- pages/homework/index.wxml -->
 <view class="container">
+  <!-- 调试切换角色按钮 -->
+  <view class="debug-switch" bindtap="switchRole">
+    <text class="debug-switch-text">切换角色</text>
+  </view>
+
   <!-- 顶部：日期选择器 + 作业录入按钮 -->
   <view class="header">
     <view class="date-picker">

@@ -1,4 +1,4 @@
-const storage = require('../../utils/storage.js');
+const cloudDB = require('../../utils/cloud-db.js');
 
 Page({
   data: {
@@ -10,15 +10,14 @@ Page({
       phone: ''
     },
     
-
+    // 老师ID
+    teacherId: '',
     
     // 今日数据
     todayData: {
-      modificationCount: 5,
-      correctionCount: 3
+      modificationCount: 0,
+      correctionCount: 0
     },
-    
-
     
     // 动画
     cardAnimation: null,
@@ -37,81 +36,22 @@ Page({
     currentTaskType: '',
     currentTaskIndex: -1,
     
-    // 待修改任务
-    modificationTasks: [
-      {
-        studentName: '小明',
-        studentClass: '一年级一班',
-        taskTitle: '数学作业',
-        submitTime: '2026-03-31 10:30',
-        description: '完成课本第10页的习题1-5题'
-      },
-      {
-        studentName: '小红',
-        studentClass: '一年级二班',
-        taskTitle: '语文作业',
-        submitTime: '2026-03-31 09:15',
-        description: '抄写生字表第5课的词语'
-      },
-      {
-        studentName: '小李',
-        studentClass: '二年级一班',
-        taskTitle: '英语作业',
-        submitTime: '2026-03-31 11:20',
-        description: '完成练习册第8页的对话练习'
-      },
-      {
-        studentName: '小张',
-        studentClass: '二年级二班',
-        taskTitle: '数学作业',
-        submitTime: '2026-03-31 10:45',
-        description: '完成课本第12页的应用题'
-      },
-      {
-        studentName: '小王',
-        studentClass: '三年级一班',
-        taskTitle: '科学作业',
-        submitTime: '2026-03-31 14:30',
-        description: '完成实验报告'
-      }
-    ],
+    // 待修改任务（未完成）
+    modificationTasks: [],
     
     // 待订正任务
-    correctionTasks: [
-      {
-        studentName: '小刚',
-        studentClass: '一年级一班',
-        taskTitle: '数学作业',
-        submitTime: '2026-03-30 16:45',
-        description: '完成课本第8页的习题，需订正第3题'
-      },
-      {
-        studentName: '小丽',
-        studentClass: '一年级二班',
-        taskTitle: '语文作业',
-        submitTime: '2026-03-30 15:30',
-        description: '抄写生字表，需订正错别字'
-      },
-      {
-        studentName: '小强',
-        studentClass: '二年级一班',
-        taskTitle: '英语作业',
-        submitTime: '2026-03-30 17:15',
-        description: '完成练习册第6页，需订正语法错误'
-      }
-    ]
+    correctionTasks: []
   },
   
   onLoad() {
     this.initAnimation();
-    this.loadTaskData();
     this.loadTeacherInfo();
   },
   
   onShow() {
     // 每次页面显示时重新加载任务数据
-    this.loadTaskData();
     this.loadTeacherInfo();
+    this.loadTaskData();
     // 更新tabBar选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().updateSelected();
@@ -122,14 +62,17 @@ Page({
   loadTeacherInfo() {
     try {
       const profile = wx.getStorageSync('profile');
+      const teacherInfo = wx.getStorageSync('teacher_info');
+      
       if (profile && profile.role === 'teacher') {
         this.setData({
           teacherInfo: {
             name: profile.name || '张老师',
-            school: profile.school || '北京第一小学',
+            school: profile.school || '第一小学',
             avatarText: profile.name ? profile.name.charAt(0) : '张',
             phone: profile.parentPhone || ''
-          }
+          },
+          teacherId: teacherInfo?._id || ''
         });
       }
     } catch (error) {
@@ -137,50 +80,58 @@ Page({
     }
   },
   
-  // 加载任务数据
-  loadTaskData() {
-    // 初始化模拟数据
-    storage.initMockData();
+  // 加载任务数据（从云端获取）
+  async loadTaskData() {
+    const teacherId = this.data.teacherId;
+    if (!teacherId) {
+      console.log('[loadTaskData] 没有老师ID');
+      return;
+    }
     
-    // 获取今天的日期
-    const today = new Date().toISOString().split('T')[0];
-    
-    // 从存储中获取今日作业
-    const records = storage.getRecordsByDate(today);
-    
-    // 转换为待修改和待订正任务
-    const modificationTasks = [];
-    const correctionTasks = [];
-    
-    records.forEach((record, index) => {
-      if (record.status === 0) { // 未完成，待修改
-        modificationTasks.push({
-          id: record.id,
-          studentName: record.studentName,
-          studentClass: `三年级一班`, // 从学生信息中获取班级
-          taskTitle: `${record.subject}作业`,
-          submitTime: `${today} 10:00`, // 模拟提交时间
-          description: record.content
+    try {
+      // 获取今天的日期
+      const today = new Date().toISOString().split('T')[0];
+      
+      // 从云端获取作业数据
+      const result = await cloudDB.getHomeworkByTeacher(teacherId, today, today);
+      
+      if (result.success) {
+        // 转换为待修改和待订正任务
+        const modificationTasks = [];
+        const correctionTasks = [];
+        
+        result.data.forEach((record) => {
+          const task = {
+            id: record._id,
+            studentName: record.studentName || '未知学生',
+            studentClass: record.className || '未分班',
+            taskTitle: `${record.subject || '数学'}作业`,
+            submitTime: record.createTime ? new Date(record.createTime).toLocaleString() : today,
+            description: record.content || '',
+            status: record.status || 0
+          };
+          
+          if (record.status === 0) {
+            // 未完成 = 待修改
+            modificationTasks.push(task);
+          } else if (record.status === 2) {
+            // 待订正
+            correctionTasks.push(task);
+          }
         });
-      } else if (record.status === 2) { // 待订正
-        correctionTasks.push({
-          id: record.id,
-          studentName: record.studentName,
-          studentClass: `三年级一班`, // 从学生信息中获取班级
-          taskTitle: `${record.subject}作业`,
-          submitTime: `${today} 09:00`, // 模拟提交时间
-          description: record.content
+        
+        this.setData({
+          modificationTasks: modificationTasks,
+          correctionTasks: correctionTasks,
+          'todayData.modificationCount': modificationTasks.length,
+          'todayData.correctionCount': correctionTasks.length
         });
+        
+        console.log('[loadTaskData] 加载成功，待修改:', modificationTasks.length, '待订正:', correctionTasks.length);
       }
-    });
-    
-    // 更新数据
-    this.setData({
-      modificationTasks: modificationTasks,
-      correctionTasks: correctionTasks,
-      'todayData.modificationCount': modificationTasks.length,
-      'todayData.correctionCount': correctionTasks.length
-    });
+    } catch (error) {
+      console.error('加载任务数据失败:', error);
+    }
   },
   
   // 初始化动画
@@ -398,7 +349,7 @@ Page({
   },
 
   // 保存作业修改
-  saveTask() {
+  async saveTask() {
     const { currentTask, currentTaskType, currentTaskIndex } = this.data;
     
     // 验证作业内容
@@ -422,34 +373,48 @@ Page({
         return;
       }
       
-      // 更新存储中的作业内容
-      storage.updateRecord(updatedTask.id, 2, updatedTask.description); // 2表示待订正
-      
-      // 直接更新待订正列表
-      const updatedTasks = [...this.data.correctionTasks];
-      updatedTasks[currentTaskIndex] = updatedTask;
-      this.setData({
-        correctionTasks: updatedTasks
-      });
-      
-      wx.showToast({
-        title: '保存成功',
-        icon: 'success'
-      });
+      // 更新云端数据
+      try {
+        const result = await cloudDB.updateHomework({
+          _id: updatedTask.id,
+          status: 2,  // 2表示待订正
+          remark: updatedTask.description
+        });
+        
+        if (result.success) {
+          wx.showToast({
+            title: '保存成功',
+            icon: 'success'
+          });
+          // 重新加载数据
+          this.loadTaskData();
+        } else {
+          wx.showToast({
+            title: result.message || '保存失败',
+            icon: 'none'
+          });
+        }
+      } catch (err) {
+        console.error('保存失败:', err);
+        wx.showToast({
+          title: '保存失败',
+          icon: 'none'
+        });
+      }
     }
     
     this.hideEditTaskModal();
   },
 
-  // 订正作业
-  correctTask(e) {
+  // 订正作业（移至待订正状态）
+  async correctTask(e) {
     const index = e.currentTarget.dataset.index;
     const type = e.currentTarget.dataset.type;
     
     wx.showModal({
       title: '订正作业',
       content: '确定要订正此作业吗？',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
           if (type === 'modification') {
             // 验证索引是否有效
@@ -461,31 +426,37 @@ Page({
               return;
             }
             
-            // 从待修改列表移除
-            const updatedModificationTasks = [...this.data.modificationTasks];
-            const task = updatedModificationTasks.splice(index, 1)[0];
+            const task = this.data.modificationTasks[index];
             
-            // 添加到待订正列表
-            const updatedCorrectionTasks = [...this.data.correctionTasks];
-            updatedCorrectionTasks.push(task);
-            
-            // 更新存储中的作业状态
-            storage.updateRecord(task.id, 2, ''); // 2表示待订正
-            
-            // 更新数据
-            this.setData({
-              modificationTasks: updatedModificationTasks,
-              correctionTasks: updatedCorrectionTasks,
-              'todayData.modificationCount': updatedModificationTasks.length,
-              'todayData.correctionCount': updatedCorrectionTasks.length
-            });
-            
-            wx.showToast({
-              title: '作业已移至待订正',
-              icon: 'success'
-            });
+            // 更新云端数据
+            try {
+              const result = await cloudDB.updateHomework({
+                _id: task.id,
+                status: 2  // 2表示待订正
+              });
+              
+              if (result.success) {
+                wx.showToast({
+                  title: '作业已移至待订正',
+                  icon: 'success'
+                });
+                // 重新加载数据
+                this.loadTaskData();
+              } else {
+                wx.showToast({
+                  title: result.message || '更新失败',
+                  icon: 'none'
+                });
+              }
+            } catch (err) {
+              console.error('更新失败:', err);
+              wx.showToast({
+                title: '更新失败',
+                icon: 'none'
+              });
+            }
           } else if (type === 'correction') {
-            // 对于待订正作业，保持原有的编辑功能
+            // 对于待订正作业，打开编辑弹窗
             let task = this.data.correctionTasks[index];
             
             this.setData({
@@ -507,43 +478,58 @@ Page({
   },
 
   // 完成作业
-  completeTask(e) {
+  async completeTask(e) {
     const index = e.currentTarget.dataset.index;
     const type = e.currentTarget.dataset.type;
     
     wx.showModal({
       title: '完成作业',
       content: '确定要标记此作业为完成吗？',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
+          let task;
+          
           if (type === 'modification') {
-            const updatedTasks = [...this.data.modificationTasks];
-            const task = updatedTasks.splice(index, 1)[0];
-            
-            // 更新存储中的作业状态
-            storage.updateRecord(task.id, 1, ''); // 1表示已完成
-            
-            this.setData({
-              modificationTasks: updatedTasks,
-              'todayData.modificationCount': updatedTasks.length
-            });
+            task = this.data.modificationTasks[index];
           } else if (type === 'correction') {
-            const updatedTasks = [...this.data.correctionTasks];
-            const task = updatedTasks.splice(index, 1)[0];
-            
-            // 更新存储中的作业状态
-            storage.updateRecord(task.id, 1, ''); // 1表示已完成
-            
-            this.setData({
-              correctionTasks: updatedTasks,
-              'todayData.correctionCount': updatedTasks.length
-            });
+            task = this.data.correctionTasks[index];
           }
           
-          wx.showToast({
-            title: '作业已完成',
-            icon: 'success'
-          });
+          if (!task) {
+            wx.showToast({
+              title: '作业不存在',
+              icon: 'none'
+            });
+            return;
+          }
+          
+          // 更新云端数据
+          try {
+            const result = await cloudDB.updateHomework({
+              _id: task.id,
+              status: 1  // 1表示已完成
+            });
+            
+            if (result.success) {
+              wx.showToast({
+                title: '作业已完成',
+                icon: 'success'
+              });
+              // 重新加载数据
+              this.loadTaskData();
+            } else {
+              wx.showToast({
+                title: result.message || '更新失败',
+                icon: 'none'
+              });
+            }
+          } catch (err) {
+            console.error('更新失败:', err);
+            wx.showToast({
+              title: '更新失败',
+              icon: 'none'
+            });
+          }
         }
       }
     });

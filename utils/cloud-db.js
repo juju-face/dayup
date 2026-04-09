@@ -27,12 +27,13 @@ class CloudDB {
       }
       
       // 获取云开发环境ID（从配置或本地存储）
-      const envId = wx.getStorageSync('cloud_env_id') || '';
+      let envId = wx.getStorageSync('cloud_env_id') || '';
       
+      // 如果本地存储没有，使用默认环境ID
       if (!envId || envId === 'your-env-id') {
-        console.warn('云开发环境ID未配置，请在微信开发者工具中开通云开发并设置环境ID');
-        // 不抛出错误，让应用可以继续使用本地存储
-        return;
+        envId = 'dayup-02-8gpzk22z15cf48a9'; // 云开发环境ID
+        // 保存到本地存储
+        wx.setStorageSync('cloud_env_id', envId);
       }
       
       wx.cloud.init({
@@ -73,9 +74,9 @@ class CloudDB {
     
     try {
       const result = await wx.cloud.callFunction({
-        name: 'homework',
+        name: 'api',
         data: {
-          action: 'add',
+          action: 'addHomeworkRecord',
           data: data
         }
       });
@@ -97,9 +98,9 @@ class CloudDB {
     
     try {
       const result = await wx.cloud.callFunction({
-        name: 'homework',
+        name: 'api',
         data: {
-          action: 'update',
+          action: 'updateHomeworkStatus',
           data: data
         }
       });
@@ -121,9 +122,9 @@ class CloudDB {
     
     try {
       const result = await wx.cloud.callFunction({
-        name: 'homework',
+        name: 'api',
         data: {
-          action: 'delete',
+          action: 'deleteHomeworkRecord',
           data: { _id }
         }
       });
@@ -147,9 +148,9 @@ class CloudDB {
     
     try {
       const result = await wx.cloud.callFunction({
-        name: 'homework',
+        name: 'api',
         data: {
-          action: 'getByTeacher',
+          action: 'getHomeworkByTeacher',
           data: { teacherId, startDate, endDate }
         }
       });
@@ -173,9 +174,13 @@ class CloudDB {
     }
     
     try {
+      // 调用 api 云函数，查询 homework_records 集合
       const result = await wx.cloud.callFunction({
-        name: 'getHomeworkByStudent',
-        data: { studentId, date, startDate, endDate }
+        name: 'api',
+        data: {
+          action: 'getHomeworkByStudent',
+          data: { studentId, date, startDate, endDate }
+        }
       });
       return result.result;
     } catch (err) {
@@ -511,6 +516,82 @@ class CloudDB {
     } catch (err) {
       console.error('创建监听失败:', err);
       return null;
+    }
+  }
+
+  // ==================== 费用相关 ====================
+
+  /**
+   * 添加缴费记录
+   * @param {Object} data 缴费数据
+   */
+  async addFeeRecord(data) {
+    if (!this.checkInitialized()) {
+      return { success: false, message: '云开发未初始化' };
+    }
+    
+    try {
+      const result = await wx.cloud.callFunction({
+        name: 'api',
+        data: {
+          action: 'addFeeRecord',
+          data: data
+        }
+      });
+      return result.result;
+    } catch (err) {
+      console.error('添加缴费记录失败:', err);
+      return { success: false, message: err.message };
+    }
+  }
+
+  /**
+   * 获取缴费记录
+   * @param {string} studentId 学生ID
+   * @param {string} month 月份
+   */
+  async getFeeRecords(studentId, month) {
+    if (!this.checkInitialized()) {
+      return { success: false, message: '云开发未初始化' };
+    }
+    
+    try {
+      const result = await wx.cloud.callFunction({
+        name: 'api',
+        data: {
+          action: 'getFeeRecords',
+          data: { studentId, month }
+        }
+      });
+      return result.result;
+    } catch (err) {
+      console.error('获取缴费记录失败:', err);
+      return { success: false, message: err.message };
+    }
+  }
+
+  /**
+   * 更新学生费用状态
+   * @param {string} studentId 学生ID
+   * @param {Object} feeInfo 费用信息
+   */
+  async updateStudentFeeInfo(studentId, feeInfo) {
+    if (!this.checkInitialized()) {
+      return { success: false, message: '云开发未初始化' };
+    }
+    
+    try {
+      const result = await wx.cloud.callFunction({
+        name: 'api',
+        data: {
+          action: 'updateStudent',
+          data: { _id: studentId, ...feeInfo }
+        }
+      });
+      return result.result;
+    } catch (err) {
+      console.error('更新学生费用状态失败:', err);
+      return { success: false, message: err.message };
     }
   }
 }

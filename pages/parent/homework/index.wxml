@@ -1,4 +1,9 @@
 <view class="container">
+  <!-- 调试切换角色按钮 -->
+  <view class="debug-switch" bindtap="switchRole">
+    <text class="debug-switch-text">切换角色</text>
+  </view>
+
   <!-- 顶部：孩子姓名 + 今日日期 -->
   <view class="header">
     <view class="child-info">

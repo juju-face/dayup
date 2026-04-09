@@ -15,7 +15,7 @@
 
   <!-- 今日记录面板 -->
   <view wx:if="{{ currentTab === 'today' }}" class="panel today-panel">
-    <!-- 顶部统计行 -->
+    <!-- 顶部统计�?-->
     <view class="today-stats">
       <view class="today-stat-item">
         <text class="today-stat-label">应到</text>
@@ -40,7 +40,7 @@
       <block wx:for="{{ todayRecords }}" wx:key="{{ item.id }}">
         <view class="record-item" bindlongpress="showRecordMenu" data-record="{{ item }}">
           <view class="record-avatar">
-            <image src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+            <image src="{{ item.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0' }}" mode="aspectFill"></image>
           </view>
           <view class="record-info">
             <view class="record-name t-body">{{ item.childName }}</view>
@@ -56,7 +56,7 @@
         </view>
       </block>
 
-      <!-- 空状态 -->
+      <!-- 空状�?-->
       <view wx:if="{{ todayRecords.length === 0 }}" class="empty-container">
         <empty-state text="今日暂无签到记录" icon="📋"></empty-state>
       </view>
@@ -87,9 +87,9 @@
         <view class="step-title t-h3">步骤3：选择学生</view>
         <view wx:if="{{ makeupStudents.length > 0 }}" class="student-selection">
           <view wx:for="{{ makeupStudents }}" wx:key="{{ item.id }}" class="student-option {{ item.selected ? 'selected' : '' }}" bindtap="toggleStudentSelection" data-index="{{ index }}">
-            <image class="student-option-avatar" src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+            <image class="student-option-avatar" src="{{ item.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0' }}" mode="aspectFill"></image>
             <text class="student-option-name">{{ item.name }}</text>
-            <view wx:if="{{ item.selected }}" class="selected-mark">✓</view>
+            <view wx:if="{{ item.selected }}" class="selected-mark">�?/view>
           </view>
         </view>
         <view wx:else class="empty-selection">
@@ -97,9 +97,9 @@
         </view>
       </view>
 
-      <!-- 步骤4：时间输入 -->
+      <!-- 步骤4：时间输�?-->
       <view class="form-step">
-        <view class="step-title t-h3">步骤4：输入时间</view>
+        <view class="step-title t-h3">步骤4：输入时�?/view>
         <input type="text" value="{{ makeupForm.time }}" placeholder="14:30" maxlength="5" bindinput="bindMakeupTimeInput" class="time-input"/>
       </view>
 
@@ -116,13 +116,13 @@
         <picker mode="date" value="{{ queryForm.startDate }}" bindchange="bindQueryStartDateChange">
           <view class="filter-picker">{{ queryForm.startDate }}</view>
         </picker>
-        <text class="filter-separator">至</text>
+        <text class="filter-separator">�?/text>
         <picker mode="date" value="{{ queryForm.endDate }}" bindchange="bindQueryEndDateChange">
           <view class="filter-picker">{{ queryForm.endDate }}</view>
         </picker>
       </view>
       <view class="filter-row">
-        <text class="filter-label">时段：</text>
+        <text class="filter-label">时段�?/text>
         <checkbox-group bindchange="bindQueryTimeSlotsChange">
           <label wx:for="{{ timeSlotOptions }}" wx:key="{{ item.id }}" class="checkbox-label">
             <checkbox value="{{ item.id }}" checked="{{ item.checked }}"/>{{ item.name }}
@@ -133,8 +133,8 @@
         <text class="filter-label">状态：</text>
         <radio-group bindchange="bindQueryStatusChange">
           <label class="radio-label"><radio value="all" checked="{{ queryForm.status === 'all' }}"/>全部</label>
-          <label class="radio-label"><radio value="checkedIn" checked="{{ queryForm.status === 'checkedIn' }}"/>已签到</label>
-          <label class="radio-label"><radio value="notCheckedIn" checked="{{ queryForm.status === 'notCheckedIn' }}"/>未签到</label>
+          <label class="radio-label"><radio value="checkedIn" checked="{{ queryForm.status === 'checkedIn' }}"/>已签�?/label>
+          <label class="radio-label"><radio value="notCheckedIn" checked="{{ queryForm.status === 'notCheckedIn' }}"/>未签�?/label>
         </radio-group>
       </view>
       <button class="query-btn" bindtap="executeQuery">查询</button>
@@ -146,7 +146,7 @@
       <block wx:for="{{ queryResults }}" wx:key="{{ item.id }}">
         <view class="record-item">
           <view class="record-avatar">
-            <image src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+            <image src="{{ item.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0' }}" mode="aspectFill"></image>
           </view>
           <view class="record-info">
             <view class="record-name t-body">{{ item.childName }}</view>
@@ -163,10 +163,10 @@
 
       <!-- 加载更多 -->
       <view wx:if="{{ queryLoading }}" class="loading-more">
-        <text>加载中...</text>
+        <text>加载�?..</text>
       </view>
 
-      <!-- 空状态 -->
+      <!-- 空状�?-->
       <view wx:if="{{ queryResults.length === 0 && !queryLoading }}" class="empty-container">
         <empty-state text="暂无查询结果" icon="🔍"></empty-state>
       </view>

@@ -1,8 +1,8 @@
 <view class="container" wx:if="{{child}}">
-  <!-- 头部卡片 -->
+  <!-- 顶部卡片 -->
   <view class="header-card">
     <view class="avatar-wrapper">
-      <image class="avatar" src="{{child.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+      <image class="avatar" src="{{child.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"></image>
     </view>
     <text class="child-name">{{child.name}}</text>
     <text class="child-class">{{child.className || '一年级一班'}}</text>
@@ -27,7 +27,7 @@
       <text class="info-label">家长联系电话</text>
       <view class="phone-wrapper">
         <text class="info-value">{{child.parentPhone || '138****1234'}}</text>
-        <text class="copy-icon">📋</text>
+        <text class="copy-icon">复制</text>
       </view>
     </view>
     <view class="info-item">
@@ -40,7 +40,7 @@
     </view>
     <view class="info-item">
       <text class="info-label">紧急联系人</text>
-      <text class="info-value">{{child.emergencyContact || '张三（爸爸）'}}</text>
+      <text class="info-value">{{child.emergencyContact || '张三（父亲）'}}</text>
     </view>
   </view>
 
@@ -55,4 +55,13 @@
   </view>
 
   <view class="safe-area"></view>
+</view>
+
+<!-- 无孩子数据时显示 -->
+<view class="container empty-state" wx:if="{{!child}}">
+  <view class="empty-content">
+    <text class="empty-icon">👶</text>
+    <text class="empty-text">暂无孩子信息</text>
+    <text class="empty-tip">请联系老师绑定孩子信息</text>
+  </view>
 </view>

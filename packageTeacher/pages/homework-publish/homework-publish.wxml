@@ -1,0 +1,214 @@
+<!--packageTeacher/pages/homework-publish/homework-publish.wxml-->
+<view class="container">
+  <!-- 草稿提示 -->
+  <view wx:if="{{showDraftTip}}" class="draft-tip">
+    <text class="draft-icon">💾</text>
+    <text class="draft-text">发现未发布的草稿</text>
+    <view class="draft-actions">
+      <text class="draft-action" bindtap="loadDraft">加载</text>
+      <text class="draft-action" bindtap="discardDraft">放弃</text>
+    </view>
+  </view>
+
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">发布作业</text>
+    <view class="header-actions">
+      <text class="header-action" bindtap="showTemplatePicker">
+        <text class="action-icon">📋</text>
+        模板
+      </text>
+    </view>
+  </view>
+
+  <!-- 发布模式切换 -->
+  <view class="mode-switch">
+    <view class="mode-item {{!showBatchMode ? 'active' : ''}}" bindtap="toggleBatchMode">
+      <text class="mode-icon">👤</text>
+      <text>单个发布</text>
+    </view>
+    <view class="mode-item {{showBatchMode ? 'active' : ''}}" bindtap="toggleBatchMode">
+      <text class="mode-icon">👥</text>
+      <text>批量发布</text>
+    </view>
+  </view>
+
+  <!-- 学生选择区域 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">选择学生</text>
+      <text class="section-subtitle">已选择 {{selectedStudents.length}} 人</text>
+    </view>
+    
+    <!-- 批量模式 -->
+    <block wx:if="{{showBatchMode}}">
+      <view class="student-grid">
+        <view 
+          class="student-item {{selectedStudents.indexOf(item._id || item.id) > -1 ? 'selected' : ''}}" 
+          wx:for="{{students}}" 
+          wx:key="_id"
+          bindtap="onSelectStudent"
+          data-student-id="{{item._id || item.id}}"
+        >
+          <view class="student-avatar">{{item.name.charAt(0)}}</view>
+          <text class="student-name">{{item.name}}</text>
+          <view class="select-indicator">
+            <text wx:if="{{selectedStudents.indexOf(item._id || item.id) > -1}}" class="check-icon">✓</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 单个模式 -->
+    <block wx:else>
+      <picker 
+        class="single-student-picker"
+        bindchange="onSelectSingleStudent"
+        range="{{students}}"
+        range-key="name"
+        value="{{selectedStudentIndex}}"
+      >
+        <view class="picker-content">
+          <text wx:if="{{selectedStudents.length === 0}}" class="picker-placeholder">请选择学生</text>
+          <text wx:else class="picker-value">{{selectedStudentName}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </block>
+  </view>
+
+  <!-- 作业内容 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">作业内容</text>
+      <text class="section-action" bindtap="onSaveAsTemplate">
+        <text class="action-icon">💾</text>
+        存为模板
+      </text>
+    </view>
+    
+    <!-- 科目选择 -->
+    <view class="form-item">
+      <text class="form-label">科目</text>
+      <view class="subject-selector">
+        <view 
+          class="subject-tag {{subject === '语文' ? 'active' : ''}}" 
+          bindtap="onSelectSubject"
+          data-subject="语文"
+        >语文</view>
+        <view 
+          class="subject-tag {{subject === '数学' ? 'active' : ''}}" 
+          bindtap="onSelectSubject"
+          data-subject="数学"
+        >数学</view>
+        <view 
+          class="subject-tag {{subject === '英语' ? 'active' : ''}}" 
+          bindtap="onSelectSubject"
+          data-subject="英语"
+        >英语</view>
+        <view 
+          class="subject-tag {{subject === '其他' ? 'active' : ''}}" 
+          bindtap="onSelectSubject"
+          data-subject="其他"
+        >其他</view>
+      </view>
+    </view>
+    
+    <!-- 作业内容 -->
+    <view class="form-item">
+      <text class="form-label">作业内容</text>
+      <textarea 
+        class="content-input"
+        placeholder="请输入作业内容，如：练习册P12-15"
+        placeholder-class="placeholder"
+        bindinput="onContentInput"
+        value="{{content}}"
+        maxlength="200"
+        auto-height
+      />
+      <view class="input-count">{{content.length}}/200</view>
+    </view>
+    
+    <!-- 备注 -->
+    <view class="form-item">
+      <text class="form-label">备注（选填）</text>
+      <textarea 
+        class="remark-input"
+        placeholder="对作业的补充说明"
+        placeholder-class="placeholder"
+        bindinput="onRemarkInput"
+        value="{{remark}}"
+        maxlength="100"
+        auto-height
+      />
+    </view>
+  </view>
+
+  <!-- 日期选择 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">布置日期</text>
+    </view>
+    <picker 
+      class="date-picker"
+      bindchange="onDateChange"
+      mode="date"
+      value="{{date}}"
+    >
+      <view class="picker-content">
+        <text class="picker-value">{{date}}</text>
+        <text class="picker-arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar safe-area-bottom">
+    <view class="bar-left">
+      <text class="preview-btn" bindtap="previewHomework">预览</text>
+    </view>
+    <view class="bar-right">
+      <button 
+        class="publish-btn"
+        bindtap="publishHomework"
+        loading="{{submitting}}"
+        disabled="{{submitting || selectedStudents.length === 0 || !content.trim()}}"
+      >
+        {{submitting ? '发布中...' : showBatchMode ? '批量发布' : '发布作业'}}
+      </button>
+    </view>
+  </view>
+</view>
+
+<!-- 模板选择器弹窗 -->
+<view wx:if="{{showTemplatePicker}}" class="modal-overlay" catchtouchmove="true">
+  <view class="modal-content template-modal">
+    <view class="modal-header">
+      <text class="modal-title">选择模板</text>
+      <text class="modal-close" bindtap="hideTemplatePicker">×</text>
+    </view>
+    <view class="modal-body">
+      <scroll-view class="template-list" scroll-y>
+        <view wx:if="{{templates.length === 0}}" class="empty-templates">
+          <text class="empty-icon">📋</text>
+          <text class="empty-text">暂无模板</text>
+          <text class="empty-tip">点击"存为模板"创建</text>
+        </view>
+        <view 
+          class="template-item"
+          wx:for="{{templates}}"
+          wx:key="id"
+          bindtap="onSelectTemplate"
+          data-template-id="{{item.id}}"
+        >
+          <view class="template-header">
+            <text class="template-name">{{item.name}}</text>
+            <text class="template-subject">{{item.subject}}</text>
+          </view>
+          <text class="template-content">{{item.content}}</text>
+          <text class="template-time">{{item.createTime}}</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

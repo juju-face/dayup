@@ -1,0 +1,80 @@
+<!--packageParent/pages/bind-student/bind-student.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <view class="title">绑定学生</view>
+    <view class="subtitle">输入学生ID绑定您的孩子</view>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-group">
+      <view class="input-label">学生ID</view>
+      <input 
+        class="student-id-input" 
+        placeholder="请输入学生ID"
+        placeholder-class="placeholder"
+        bindinput="onStudentIdInput"
+        value="{{studentId}}"
+      />
+      <view class="input-tip">学生ID可从老师或学校管理员处获取</view>
+    </view>
+
+    <button 
+      class="query-btn"
+      bindtap="queryStudent"
+      disabled="{{!studentId}}"
+    >
+      查询学生
+    </button>
+  </view>
+
+  <!-- 学生信息展示 -->
+  <view wx:if="{{studentInfo}}" class="student-info">
+    <view class="info-header">学生信息</view>
+    
+    <view class="info-item">
+      <view class="info-label">姓名</view>
+      <view class="info-value">{{studentInfo.name}}</view>
+    </view>
+
+    <view class="info-item">
+      <view class="info-label">年级</view>
+      <view class="info-value">{{studentInfo.grade || '未知'}}</view>
+    </view>
+
+    <view class="info-item">
+      <view class="info-label">学校</view>
+      <view class="info-value">{{studentInfo.school || '未知'}}</view>
+    </view>
+
+    <view class="info-item">
+      <view class="info-label">性别</view>
+      <view class="info-value">{{studentInfo.gender === 'male' ? '男' : studentInfo.gender === 'female' ? '女' : '未知'}}</view>
+    </view>
+
+    <view class="info-item">
+      <view class="info-label">年龄</view>
+      <view class="info-value">{{studentInfo.age || '未知'}}岁</view>
+    </view>
+  </view>
+
+  <!-- 绑定按钮 -->
+  <view wx:if="{{studentInfo}}" class="bind-section">
+    <button 
+      class="bind-btn primary"
+      bindtap="confirmBind"
+      loading="{{binding}}"
+      disabled="{{binding}}"
+    >
+      确认绑定
+    </button>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{!studentInfo && studentId}}" class="empty-state">
+    <text class="empty-icon">🔍</text>
+    <text class="empty-text">未找到学生信息</text>
+    <text class="empty-tip">请检查学生ID是否正确</text>
+  </view>
+</view>

@@ -2,7 +2,7 @@
   <!-- 头部卡片 -->
   <view class="header-card">
     <view class="avatar-wrapper">
-      <image class="avatar" src="{{child.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+      <image class="avatar" src="{{child.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"></image>
     </view>
     <text class="child-name">{{child.name}}</text>
     <text class="child-class">{{child.className || '一年级一班'}}</text>

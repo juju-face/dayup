@@ -21,9 +21,17 @@
           <el-icon><User /></el-icon>
           <span>学生管理</span>
         </el-menu-item>
+        <el-menu-item index="/teachers">
+          <el-icon><Avatar /></el-icon>
+          <span>老师管理</span>
+        </el-menu-item>
         <el-menu-item index="/fee">
           <el-icon><Money /></el-icon>
           <span>费用管理</span>
+        </el-menu-item>
+        <el-menu-item index="/data-fix">
+          <el-icon><Tools /></el-icon>
+          <span>数据修复</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -35,6 +43,19 @@
           <span class="breadcrumb">{{ pageTitle }}</span>
         </div>
         <div class="header-right">
+          <!-- 云服务状态提示 - 只在非默认状态时显示 -->
+          <template v-if="isLocalMode">
+            <el-tag type="warning" effect="dark" class="cloud-status-tag">
+              <el-icon><Warning /></el-icon>
+              本地模式
+            </el-tag>
+          </template>
+          <template v-else-if="cloudStatus.status === 'connected'">
+            <el-tag type="success" effect="plain" class="cloud-status-tag">
+              <el-icon><CircleCheck /></el-icon>
+              云服务已连接
+            </el-tag>
+          </template>
           <el-dropdown @command="handleCommand">
             <span class="user-info">
               <el-icon><UserFilled /></el-icon>
@@ -59,9 +80,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import cloudService from '../utils/cloud'
 
 const route = useRoute()
 const router = useRouter()
@@ -69,6 +91,25 @@ const router = useRouter()
 const activeMenu = computed(() => route.path)
 const pageTitle = computed(() => route.meta.title || '数据概览')
 const username = computed(() => localStorage.getItem('admin_username') || '管理员')
+
+// 云服务状态
+const cloudStatus = ref({
+  status: 'initializing',
+  useLocalMode: false,
+  initialized: false
+})
+
+// 获取云服务状态
+const getCloudStatus = () => {
+  cloudStatus.value = cloudService.getCloudStatus()
+}
+
+// 判断是否在本地模式
+const isLocalMode = computed(() => cloudStatus.value.useLocalMode)
+
+onMounted(() => {
+  getCloudStatus()
+})
 
 const handleCommand = (command) => {
   if (command === 'logout') {
@@ -136,6 +177,13 @@ const handleCommand = (command) => {
     &:hover {
       color: #409eff;
     }
+  }
+  
+  .cloud-status-tag {
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 }
 

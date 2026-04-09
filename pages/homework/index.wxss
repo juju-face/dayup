@@ -7,6 +7,22 @@
   padding-bottom: 160rpx;
 }
 
+/* 调试切换角色按钮 */
+.debug-switch {
+  position: fixed;
+  top: 120rpx;
+  right: 24rpx;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12rpx 20rpx;
+  border-radius: 30rpx;
+  z-index: 999;
+}
+
+.debug-switch-text {
+  font-size: 22rpx;
+  color: white;
+}
+
 /* 顶部：日期选择器 + 刷新按钮 */
 .header {
   display: flex;

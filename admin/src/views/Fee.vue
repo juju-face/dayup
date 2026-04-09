@@ -1,6 +1,5 @@
 <template>
   <div class="fee-page">
-    <!-- 费用设置 -->
     <el-card class="settings-card">
       <template #header>
         <div class="card-header">
@@ -26,7 +25,6 @@
       </el-form>
     </el-card>
 
-    <!-- 缴费记录 -->
     <el-card class="records-card">
       <template #header>
         <div class="card-header">
@@ -49,41 +47,24 @@
       </template>
 
       <el-table :data="feeRecords" v-loading="loading" stripe>
-        <el-table-column prop="studentName" label="学生姓名" width="100" />
-        <el-table-column prop="month" label="缴费月份" width="120" />
-        <el-table-column prop="amount" label="缴费金额" width="120">
+        <el-table-column prop="studentName" label="学生姓名" min-width="100" />
+        <el-table-column prop="payDate" label="缴费日期" min-width="120" />
+        <el-table-column prop="amount" label="缴费金额" min-width="100">
           <template #default="scope">
             <span>¥{{ scope.row.amount }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="缴费状态" width="100">
+        <el-table-column prop="status" label="缴费状态" min-width="100">
           <template #default="scope">
             <el-tag :type="scope.row.status === 'paid' ? 'success' : 'danger'">
               {{ scope.row.status === 'paid' ? '已缴费' : '未缴费' }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="payTime" label="缴费时间" width="150" />
-        <el-table-column prop="remark" label="备注" min-width="150" />
-        <el-table-column label="操作" width="150" fixed="right">
-          <template #default="scope">
-            <el-button
-              v-if="scope.row.status !== 'paid'"
-              type="success"
-              size="small"
-              @click="markAsPaid(scope.row)"
-            >
-              标记已缴
-            </el-button>
-            <el-button type="danger" size="small" @click="deleteRecord(scope.row)">
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
+        <el-table-column prop="remark" label="备注" min-width="120" />
       </el-table>
     </el-card>
 
-    <!-- 统计信息 -->
     <el-row :gutter="20" class="statistics-row">
       <el-col :span="8">
         <el-card>
@@ -111,16 +92,15 @@
       </el-col>
     </el-row>
 
-    <!-- 添加缴费记录对话框 -->
     <el-dialog v-model="dialogVisible" title="记录缴费" width="500px">
       <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px">
         <el-form-item label="选择学生" prop="studentId">
           <el-select v-model="form.studentId" placeholder="请选择学生" style="width: 100%">
             <el-option
               v-for="student in students"
-              :key="student.id"
+              :key="student._id || student.id"
               :label="student.name"
-              :value="student.id"
+              :value="student._id || student.id"
             />
           </el-select>
         </el-form-item>
@@ -183,7 +163,12 @@ const formRules = {
   amount: [{ required: true, message: '请输入金额', trigger: 'blur' }]
 }
 
-// 生成本月及前6个月的选项
+const formatTime = (time) => {
+  if (!time) return ''
+  const date = new Date(time)
+  return date.toLocaleString('zh-CN')
+}
+
 const monthOptions = computed(() => {
   const options = []
   const now = new Date()
@@ -200,56 +185,133 @@ const statistics = reactive({
   totalUnpaid: 0
 })
 
-// 加载费用设置
-const loadSettings = () => {
-  const settings = JSON.parse(localStorage.getItem('feeSettings') || '{}')
-  if (settings.monthlyFee) feeSettings.monthlyFee = settings.monthlyFee
-  if (settings.mealFee) feeSettings.mealFee = settings.mealFee
-  if (settings.materialFee) feeSettings.materialFee = settings.materialFee
-}
-
-// 保存费用设置
-const saveSettings = () => {
-  localStorage.setItem('feeSettings', JSON.stringify(feeSettings))
-  ElMessage.success('设置已保存')
-}
-
-// 加载学生列表
-const loadStudents = () => {
-  students.value = JSON.parse(localStorage.getItem('students') || '[]')
-}
-
-// 加载缴费记录
-const loadFeeRecords = () => {
-  loading.value = true
-  const records = JSON.parse(localStorage.getItem('feeRecords') || '[]')
-  
-  // 筛选月份
-  if (selectedMonth.value) {
-    feeRecords.value = records.filter(r => r.month === selectedMonth.value)
-  } else {
-    feeRecords.value = records
+const loadSettings = async () => {
+  try {
+    // 优先从云端加载
+    const result = await cloudService.getSystemSettings('feeSettings')
+    if (result.success && result.data) {
+      const settings = typeof result.data === 'string' ? JSON.parse(result.data) : result.data
+      // 使用 !== undefined 判断，支持 0 值
+      if (settings.monthlyFee !== undefined) feeSettings.monthlyFee = settings.monthlyFee
+      if (settings.mealFee !== undefined) feeSettings.mealFee = settings.mealFee
+      if (settings.materialFee !== undefined) feeSettings.materialFee = settings.materialFee
+      console.log('[费用管理] 从云端加载设置成功:', settings)
+    } else {
+      // 云端没有，从 localStorage 加载
+      const settings = JSON.parse(localStorage.getItem('feeSettings') || '{}')
+      if (settings.monthlyFee !== undefined) feeSettings.monthlyFee = settings.monthlyFee
+      if (settings.mealFee !== undefined) feeSettings.mealFee = settings.mealFee
+      if (settings.materialFee !== undefined) feeSettings.materialFee = settings.materialFee
+      console.log('[费用管理] 从本地加载设置成功:', settings)
+    }
+  } catch (error) {
+    console.error('[费用管理] 加载设置失败:', error)
+    // 降级到 localStorage
+    const settings = JSON.parse(localStorage.getItem('feeSettings') || '{}')
+    if (settings.monthlyFee !== undefined) feeSettings.monthlyFee = settings.monthlyFee
+    if (settings.mealFee !== undefined) feeSettings.mealFee = settings.mealFee
+    if (settings.materialFee !== undefined) feeSettings.materialFee = settings.materialFee
   }
-  
-  // 计算统计
-  calculateStatistics()
-  loading.value = false
 }
 
-// 计算统计数据
+const saveSettings = async () => {
+  try {
+    // 同时保存到云端和 localStorage
+    const settingsData = {
+      monthlyFee: feeSettings.monthlyFee,
+      mealFee: feeSettings.mealFee,
+      materialFee: feeSettings.materialFee
+    }
+    
+    // 保存到云端
+    const result = await cloudService.saveSystemSettings('feeSettings', settingsData)
+    if (result.success) {
+      console.log('[费用管理] 保存到云端成功')
+    } else {
+      console.warn('[费用管理] 保存到云端失败:', result.message)
+    }
+    
+    // 同时保存到 localStorage 作为备份
+    localStorage.setItem('feeSettings', JSON.stringify(settingsData))
+    
+    ElMessage.success('设置已保存（已同步到云端）')
+    calculateStatistics()
+  } catch (error) {
+    console.error('[费用管理] 保存设置失败:', error)
+    // 即使云端失败，也保存到 localStorage
+    const settingsData = {
+      monthlyFee: feeSettings.monthlyFee,
+      mealFee: feeSettings.mealFee,
+      materialFee: feeSettings.materialFee
+    }
+    localStorage.setItem('feeSettings', JSON.stringify(settingsData))
+    ElMessage.warning('设置已保存到本地（云端同步失败）')
+    calculateStatistics()
+  }
+}
+
+const loadStudents = async () => {
+  try {
+    const result = await cloudService.getAllStudents()
+    if (result.success) {
+      students.value = result.data
+    }
+  } catch (error) {
+    console.error('加载学生列表失败:', error)
+  }
+}
+
+const loadFeeRecords = async () => {
+  loading.value = true
+  try {
+    console.log('[费用管理] 开始加载缴费记录...')
+    const result = await cloudService.getAllFeeRecords()
+    console.log('[费用管理] 加载缴费记录结果:', result)
+    
+    if (result.success) {
+      let records = result.data || []
+      console.log('[费用管理] 原始记录数量:', records.length)
+      
+      if (selectedMonth.value) {
+        // 根据 payDate 字段过滤（payDate 格式为 '2026-04-07'）
+        records = records.filter(r => {
+          if (!r.payDate) return false
+          return r.payDate.startsWith(selectedMonth.value)
+        })
+      }
+      
+      feeRecords.value = records
+      calculateStatistics()
+    } else {
+      console.error('[费用管理] 加载失败:', result.message)
+    }
+  } catch (error) {
+    console.error('加载缴费记录失败:', error)
+    ElMessage.error('加载失败')
+  } finally {
+    loading.value = false
+  }
+}
+
 const calculateStatistics = () => {
   const month = selectedMonth.value || new Date().toISOString().slice(0, 7)
-  const students = JSON.parse(localStorage.getItem('students') || '[]')
-  const records = JSON.parse(localStorage.getItem('feeRecords') || '[]')
+  const monthlyFee = feeSettings.monthlyFee || 1500
   
-  const monthlyFee = feeSettings.monthlyFee
-  statistics.totalReceivable = students.length * monthlyFee
+  // 该月所有已缴费记录的实际金额之和（与 Dashboard 保持一致）
+  const paidRecords = feeRecords.value.filter(r => {
+    return r.payDate && r.payDate.startsWith(month) && r.status === 'paid'
+  })
+  statistics.totalReceived = paidRecords.reduce((sum, r) => sum + (r.amount || 0), 0)
   
-  const paidThisMonth = records
-    .filter(r => r.month === month && r.status === 'paid')
-    .reduce((sum, r) => sum + r.amount, 0)
-  statistics.totalReceived = paidThisMonth
-  statistics.totalUnpaid = statistics.totalReceivable - paidThisMonth
+  // 已缴费学生数
+  const paidStudentIds = new Set(paidRecords.map(r => r.studentId))
+  const paidCount = paidStudentIds.size
+  const unpaidCount = students.value.length - paidCount
+  
+  // 未缴金额 = 未缴费学生数 × 托管费
+  statistics.totalUnpaid = unpaidCount * monthlyFee
+  // 应收 = 实收 + 未缴（总金额）
+  statistics.totalReceivable = statistics.totalReceived + statistics.totalUnpaid
 }
 
 const showAddFeeDialog = () => {
@@ -268,34 +330,27 @@ const handleSubmit = async () => {
       submitLoading.value = true
       
       try {
-        const records = JSON.parse(localStorage.getItem('feeRecords') || '[]')
-        const student = students.value.find(s => s.id === form.studentId)
+        const student = students.value.find(s => (s._id || s.id) === form.studentId)
         
         const newRecord = {
-          id: Date.now().toString(),
           studentId: form.studentId,
           studentName: student?.name || '',
           month: form.month,
           amount: form.amount,
           status: 'paid',
-          payTime: new Date().toLocaleString(),
+          payTime: new Date(),
           remark: form.remark
         }
         
-        records.push(newRecord)
-        localStorage.setItem('feeRecords', JSON.stringify(records))
-        
-        // 同步到云数据库
         const result = await cloudService.addFeeRecord(newRecord)
         
         if (result.success) {
-          ElMessage.success('缴费记录已添加并同步到云数据库')
+          ElMessage.success('缴费记录已添加')
+          dialogVisible.value = false
+          await loadFeeRecords()
         } else {
-          ElMessage.success('缴费记录已添加（云同步失败）')
+          ElMessage.error(result.message || '添加失败')
         }
-        
-        dialogVisible.value = false
-        loadFeeRecords()
       } catch (error) {
         ElMessage.error('添加失败')
         console.error('添加失败:', error)
@@ -306,74 +361,11 @@ const handleSubmit = async () => {
   })
 }
 
-const markAsPaid = async (row) => {
-  ElMessageBox.confirm(`确定标记 "${row.studentName}" 为已缴费吗？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    try {
-      const records = JSON.parse(localStorage.getItem('feeRecords') || '[]')
-      const index = records.findIndex(r => r.id === row.id)
-      if (index > -1) {
-        records[index].status = 'paid'
-        records[index].payTime = new Date().toLocaleString()
-        localStorage.setItem('feeRecords', JSON.stringify(records))
-        
-        // 同步到云数据库
-        const result = await cloudService.updateFeeRecord(records[index])
-        
-        if (result.success) {
-          ElMessage.success('标记成功并同步到云数据库')
-        } else {
-          ElMessage.success('标记成功（云同步失败）')
-        }
-        
-        loadFeeRecords()
-      }
-    } catch (error) {
-      ElMessage.error('标记失败')
-      console.error('标记失败:', error)
-    }
-  })
-}
-
-const deleteRecord = async (row) => {
-  ElMessageBox.confirm('确定删除这条缴费记录吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    try {
-      const records = JSON.parse(localStorage.getItem('feeRecords') || '[]')
-      const index = records.findIndex(r => r.id === row.id)
-      if (index > -1) {
-        records.splice(index, 1)
-        localStorage.setItem('feeRecords', JSON.stringify(records))
-        
-        // 同步到云数据库
-        const result = await cloudService.deleteFeeRecord(row.id)
-        
-        if (result.success) {
-          ElMessage.success('删除成功并同步到云数据库')
-        } else {
-          ElMessage.success('删除成功（云同步失败）')
-        }
-        
-        loadFeeRecords()
-      }
-    } catch (error) {
-      ElMessage.error('删除失败')
-      console.error('删除失败:', error)
-    }
-  })
-}
-
-onMounted(() => {
+onMounted(async () => {
   selectedMonth.value = new Date().toISOString().slice(0, 7)
-  loadSettings()
-  loadStudents()
-  loadFeeRecords()
+  await loadSettings()
+  await loadStudents()
+  await loadFeeRecords()
 })
 </script>
 

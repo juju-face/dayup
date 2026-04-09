@@ -15,18 +15,41 @@ Page({
     inClassStudents: [],
     refreshTimer: null,
     // [修改点1] 在原有 data 基础上增加 floatBtnAnimation
-    floatBtnAnimation: ''
+    floatBtnAnimation: '',
+    teacherInfo: null
   },
 
   onLoad() {
+    // 检查是否已登录
+    const teacherInfo = wx.getStorageSync('teacher_info');
+    if (!teacherInfo) {
+      // 未登录，跳转到登录页
+      wx.redirectTo({
+        url: '/packageTeacher/pages/login/index'
+      });
+      return;
+    }
+    
+    this.setData({ teacherInfo });
+    
     // 初始化时段选项
     this.initTimeSlots();
   },
 
   onShow() {
+    // 检查登录状态
+    const teacherInfo = wx.getStorageSync('teacher_info');
+    if (!teacherInfo) {
+      wx.redirectTo({
+        url: '/packageTeacher/pages/login/index'
+      });
+      return;
+    }
+    
     // 【调试代码】输出当前页面样式类
     console.log('[调试] 当前页面样式类:', 'teacher-home theme-teacher');
     console.log('[调试] 当前角色:', getApp().globalData.role);
+    console.log('[调试] 老师信息:', teacherInfo);
     
     // 【调试代码】强制刷新 setData
     this.setData({ refresh: Date.now() });

@@ -16,22 +16,47 @@ Page({
     },
     statusOptions: ['未完成', '已完成', '待订正'],
     subjectOptions: ['语文', '数学', '英语', '其他'],
-    teacherId: 'teacher_001', // 当前教师ID，实际应从登录信息获取
+    teacherId: '', // 从登录信息获取
     isLoading: false
   },
 
   onLoad() {
+    // 检查登录状态
+    const teacherInfo = wx.getStorageSync('teacher_info');
+    if (!teacherInfo || !teacherInfo._id) {
+      // 如果没有登录信息，提示但不跳转（调试模式）
+      console.log('[onLoad] 未登录，请先切换角色');
+      wx.showToast({
+        title: '请先切换角色登录',
+        icon: 'none'
+      });
+      return;
+    }
+    
     // 设置当前日期
     const today = new Date().toISOString().split('T')[0];
-    this.setData({ currentDate: today });
+    this.setData({ 
+      currentDate: today,
+      teacherId: teacherInfo._id
+    });
+    
+    console.log('[onLoad] 老师信息:', teacherInfo);
     
     this.loadRecords();
     this.loadStudents();
   },
 
   onShow() {
-    this.loadRecords();
-    this.loadStudents();
+    // 每次显示页面时重新获取 teacherId
+    const teacherInfo = wx.getStorageSync('teacher_info');
+    if (teacherInfo && teacherInfo._id) {
+      if (this.data.teacherId !== teacherInfo._id) {
+        this.setData({ teacherId: teacherInfo._id });
+        this.loadStudents();
+        this.loadRecords();
+      }
+    }
+    
     // 更新tabBar选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().updateSelected();
@@ -53,10 +78,10 @@ Page({
         // 转换数据格式
         const records = result.data.map(item => ({
           id: item._id,
-          studentId: item.students[0] || '',
-          studentName: this.getStudentNameById(item.students[0]),
-          subject: item.subject,
-          content: item.content,
+          studentId: item.studentId || (item.students ? item.students[0] : ''),
+          studentName: item.studentName || this.getStudentNameById(item.studentId || (item.students ? item.students[0] : '')),
+          subject: item.subject || '数学',
+          content: item.content || '',
           status: item.status || 0,
           date: item.date
         }));
@@ -69,8 +94,10 @@ Page({
           needCorrection: records.filter(r => r.status === 2).length
         };
         
+        console.log('[loadRecords] 加载成功，记录数:', records.length);
         this.setData({ records, stats });
       } else {
+        console.error('[loadRecords] 加载失败:', result.message);
         wx.showToast({
           title: result.message || '加载失败',
           icon: 'none'
@@ -93,29 +120,44 @@ Page({
     return student ? student.name : '全体学生';
   },
 
-  // 加载学生列表（使用云函数）
+  // 加载学生列表（使用云函数 getStudentsByTeacher）
   async loadStudents() {
     try {
-      const result = await cloudDB.getStudentList(this.data.teacherId);
+      const teacherId = this.data.teacherId;
       
-      if (result.success) {
-        const students = result.data.map(item => ({
+      console.log('[loadStudents] 开始加载, teacherId:', teacherId);
+      
+      if (!teacherId) {
+        console.error('[loadStudents] 没有老师ID');
+        this.setData({ students: [] });
+        return;
+      }
+      
+      const res = await wx.cloud.callFunction({
+        name: 'api',
+        data: {
+          action: 'getStudentsByTeacher',
+          data: { teacherId }
+        }
+      });
+      
+      console.log('[loadStudents] 云函数返回:', res);
+      
+      if (res.result && res.result.success) {
+        const students = (res.result.data || []).map(item => ({
           id: item._id,
           name: item.name,
           _id: item._id
         }));
+        console.log('[loadStudents] 加载成功，学生数量:', students.length);
         this.setData({ students });
+      } else {
+        console.error('[loadStudents] 加载失败:', res.result?.message);
+        this.setData({ students: [] });
       }
     } catch (error) {
-      console.error('加载学生列表失败:', error);
-      // 使用本地模拟数据作为备用
-      this.setData({
-        students: [
-          { id: 'student_001', name: '张三', _id: 'student_001' },
-          { id: 'student_002', name: '李四', _id: 'student_002' },
-          { id: 'student_003', name: '王五', _id: 'student_003' }
-        ]
-      });
+      console.error('[loadStudents] 加载失败:', error);
+      this.setData({ students: [] });
     }
   },
 
@@ -165,8 +207,17 @@ Page({
   selectStudent(e) {
     const index = e.detail.value;
     const student = this.data.students[index];
+    
+    if (!student) {
+      wx.showToast({
+        title: '请先添加学生',
+        icon: 'none'
+      });
+      return;
+    }
+    
     this.setData({
-      'newRecord.studentId': student.id,
+      'newRecord.studentId': student._id || student.id,
       'newRecord.studentName': student.name
     });
   },
@@ -211,12 +262,11 @@ Page({
     try {
       const result = await cloudDB.addHomework({
         teacherId: this.data.teacherId,
+        studentId: studentId,
+        studentName: studentName || '未知学生',
         subject: subject,
         content: content,
-        students: [studentId], // 指定学生，空数组表示全部
-        date: date,
-        deadline: '',
-        remark: ''
+        date: date
       });
 
       wx.hideLoading();
@@ -286,7 +336,7 @@ Page({
   // 删除作业（使用云函数）
   async deleteRecord(e) {
     const id = e.currentTarget.dataset.id;
-    
+
     wx.showModal({
       title: '确认删除',
       content: '删除后将无法恢复，是否继续？',
@@ -322,5 +372,164 @@ Page({
         }
       }
     });
+  },
+
+  // 切换角色（调试用）
+  switchRole() {
+    wx.showActionSheet({
+      itemList: ['切换到家长端', '切换到老师端'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          // 切换到家长端 - 输入家长手机号验证
+          this.quickLoginParent();
+        } else {
+          // 切换到老师端 - 输入老师手机号验证
+          this.quickLoginTeacher();
+        }
+      }
+    });
+  },
+
+  // 快速登录老师（调试用）
+  quickLoginTeacher() {
+    wx.showModal({
+      title: '切换到老师端',
+      editable: true,
+      placeholderText: '请输入老师手机号',
+      success: async (res) => {
+        if (res.confirm && res.content) {
+          const phone = res.content.trim();
+          if (!phone || phone.length !== 11) {
+            wx.showToast({ title: '请输入11位手机号', icon: 'none' });
+            return;
+          }
+          
+          wx.showLoading({ title: '验证中...' });
+          
+          try {
+            const result = await wx.cloud.callFunction({
+              name: 'api',
+              data: {
+                action: 'getTeacherByPhone',
+                data: { phone }
+              }
+            });
+            
+            wx.hideLoading();
+            
+            if (result.result && result.result.success && result.result.data) {
+              // 老师存在，保存登录信息
+              const teacherInfo = result.result.data;
+              wx.setStorageSync('teacher_info', teacherInfo);
+              wx.setStorageSync('profile', {
+                role: 'teacher',
+                name: teacherInfo.name,
+                parentPhone: phone
+              });
+              
+              const app = getApp();
+              app.setRole('teacher');
+              app.globalData.teacherInfo = teacherInfo;
+              
+              wx.showToast({ title: '切换成功', icon: 'success' });
+              
+              // 延迟跳转，确保 storage 写入完成
+              setTimeout(() => {
+                wx.reLaunch({
+                  url: '/pages/homework/index'
+                });
+              }, 800);
+            } else {
+              wx.showToast({ title: '该手机号未注册为老师', icon: 'none' });
+            }
+          } catch (err) {
+            wx.hideLoading();
+            console.error('验证失败:', err);
+            wx.showToast({ title: '验证失败', icon: 'none' });
+          }
+        }
+      }
+    });
+  },
+
+  // 快速登录家长（调试用）
+  quickLoginParent() {
+    wx.showModal({
+      title: '切换到家长端',
+      editable: true,
+      placeholderText: '请输入家长手机号',
+      success: async (res) => {
+        if (res.confirm && res.content) {
+          const phone = res.content.trim();
+          if (!phone || phone.length !== 11) {
+            wx.showToast({ title: '请输入11位手机号', icon: 'none' });
+            return;
+          }
+          
+          wx.showLoading({ title: '验证中...' });
+          
+          try {
+            const result = await wx.cloud.callFunction({
+              name: 'api',
+              data: {
+                action: 'getStudentsByParentPhone',
+                data: { parentPhone: phone }
+              }
+            });
+            
+            wx.hideLoading();
+            
+            if (result.result && result.result.success && result.result.data && result.result.data.length > 0) {
+              const children = result.result.data;
+              wx.setStorageSync('parentProfile', {
+                role: 'parent',
+                phone: phone
+              });
+              wx.setStorageSync('userInfo', {
+                phone: phone,
+                role: 'parent',
+                loginTime: new Date().toISOString()
+              });
+              wx.setStorageSync('childrenList', children.map(c => ({
+                ...c,
+                id: c._id || c.id
+              })));
+              
+              if (children.length > 0) {
+                const firstChild = children[0];
+                wx.setStorageSync('boundStudent', {
+                  ...firstChild,
+                  id: firstChild._id || firstChild.id
+                });
+              }
+              
+              const app = getApp();
+              app.setRole('parent');
+              
+              wx.showToast({ title: '切换成功', icon: 'success' });
+              
+              setTimeout(() => {
+                wx.reLaunch({
+                  url: '/pages/parent/homework/index'
+                });
+              }, 800);
+            } else {
+              wx.showToast({ title: '该手机号未登记为家长', icon: 'none' });
+            }
+          } catch (err) {
+            wx.hideLoading();
+            wx.showToast({ title: '验证失败', icon: 'none' });
+          }
+        }
+      }
+    });
+  },
+
+  // 清除老师端数据
+  clearTeacherData() {
+    const app = getApp();
+    app.setRole('parent');
+    // 保留登录信息，只是切换角色
+    console.log('已切换到家长端');
   }
 });

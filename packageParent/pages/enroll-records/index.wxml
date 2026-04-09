@@ -1,15 +1,15 @@
 <!-- packageParent/pages/enroll-records/index.wxml -->
 <view class="container">
-  <!-- 筛选标签 -->
+  <!-- 筛选标�?-->
   <view class="filter-tabs">
     <view class="filter-tab {{ activeFilter === 'all' ? 'active' : '' }}" bindtap="switchFilter" data-filter="all">
       全部
     </view>
     <view class="filter-tab {{ activeFilter === 'pending' ? 'active' : '' }}" bindtap="switchFilter" data-filter="pending">
-      待签到
+      待签�?
     </view>
     <view class="filter-tab {{ activeFilter === 'completed' ? 'active' : '' }}" bindtap="switchFilter" data-filter="completed">
-      已完成
+      已完�?
     </view>
   </view>
   
@@ -20,7 +20,7 @@
         <!-- 孩子信息 -->
         <view class="child-info">
           <view class="child-avatar">
-            <image src="{{ item.avatar || '../../../../resources/default-avatar.png' }}" mode="aspectFill"></image>
+            <image src="{{ item.avatar || '../https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0' }}" mode="aspectFill"></image>
           </view>
           <view class="child-details">
             <view class="child-name">{{ item.childName }}</view>
@@ -51,12 +51,12 @@
       </view>
     </block>
     
-    <!-- 空状态 -->
+    <!-- 空状�?-->
     <view wx:if="{{ filteredRecords.length === 0 }}" class="empty-state">
       <view class="empty-icon">📋</view>
       <view class="empty-text">暂无报名记录</view>
       <navigator url="../time-list/index" class="go-enroll-btn">
-        去报名
+        去报�?
       </navigator>
     </view>
   </view>

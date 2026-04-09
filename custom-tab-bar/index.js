@@ -16,15 +16,13 @@ Component({
     this.checkShowTabBar();
     // 初始化导航栏
     this.initTabList();
-    // 监听数据变化，更新徽章
+    // 初始化时更新一次徽章
     this.updateBadge();
-    // 每5秒更新一次徽章
-    this.badgeTimer = setInterval(() => {
-      this.updateBadge();
-    }, 5000);
+    // 移除定时器，改为只在页面切换时更新
+    // 徽章更新频率过高会影响性能
   },
   detached() {
-    // 清理定时器
+    // 清理定时器（已移除定时器，此处保留兼容）
     if (this.badgeTimer) {
       clearInterval(this.badgeTimer);
     }

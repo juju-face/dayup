@@ -34,8 +34,10 @@
     {
       "root": "packageTeacher",
       "pages": [
+        "pages/login/index",
         "pages/record/index",
-        "pages/students/index"
+        "pages/students/index",
+        "pages/homework-publish/homework-publish"
       ]
     }
   ],

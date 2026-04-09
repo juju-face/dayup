@@ -56,9 +56,11 @@
     </view>
   </view>
 
-  <!-- 底部悬浮按钮：添加作业 -->
-  <view class="add-floating-btn" bindtap="showAddModal">
-    <text class="add-icon">+</text>
+  <!-- 底部固定按钮：添加作业 -->
+  <view class="add-btn-container">
+    <view class="add-btn" bindtap="showAddModal">
+      <text class="add-btn-text">+ 录入作业</text>
+    </view>
   </view>
 
   <!-- 添加作业弹窗 -->
@@ -72,8 +74,16 @@
       <view class="modal-body">
         <view class="form-item">
           <text class="label">选择学生</text>
-          <picker bindchange="selectStudent" range="{{students}}" range-key="name">
-            <view class="picker-value">{{newRecord.studentName || '请选择学生'}}</view>
+          <picker 
+            bindchange="selectStudent" 
+            range="{{students}}" 
+            range-key="name" 
+            value="{{selectedStudentIndex}}"
+            disabled="{{students.length === 0}}"
+          >
+            <view class="picker-value {{students.length === 0 ? 'disabled' : ''}}">
+              {{students.length === 0 ? '暂无学生' : (newRecord.studentName || '请选择学生')}}
+            </view>
           </picker>
         </view>
         <view class="form-item">

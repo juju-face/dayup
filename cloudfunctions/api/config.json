@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "openapi": [
+      "cloudbase.accessToken"
+    ]
+  },
+  "triggers": [
+    {
+      "name": "api",
+      "type": "http",
+      "config": {
+        "method": "POST,GET,OPTIONS",
+        "path": "/"
+      }
+    }
+  ]
+}

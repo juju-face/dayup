@@ -1,94 +1,59 @@
-<view class="container" wx:if="{{child}}">
-  <!-- 顶部孩子卡 -->
-  <view class="child-card">
-    <view class="child-header">
-      <view class="avatar-wrapper">
-        <image class="avatar" src="{{child.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+<view class="container">
+  <!-- 用户卡片 -->
+  <view class="user-card">
+    <view class="avatar-section">
+      <view class="avatar-circle">
+        <text class="avatar-text">{{profile.name ? profile.name.charAt(0) : '用'}}</text>
       </view>
-      <view class="child-info">
-        <text class="child-name">{{child.name}}</text>
-        <text class="child-class">{{child.className || '一年级一班'}}</text>
-        <text class="enroll-date">入学日期：{{child.enrollDate || '2025-09-01'}}</text>
-      </view>
-      <view class="edit-btn" bindtap="handleEditChild">
-        <text class="edit-icon">✏️</text>
-      </view>
-    </view>
-    <view class="divider" wx:if="{{child.allergy}}"></view>
-    <view class="allergy-section" wx:if="{{child.allergy}}">
-      <text class="allergy-text">⚠️ 注意事项：{{child.allergy}}</text>
-    </view>
-  </view>
-
-  <!-- 费用状态卡 -->
-  <view class="fee-status-card" bindtap="handleFeeDetail">
-    <view class="fee-header">
-      <view class="days-section">
-        <text class="days-number">{{feeInfo.remainingDays}}</text>
-        <text class="days-unit">天</text>
-      </view>
-      <view class="status-tag {{feeInfo.paidStatus}}">
-        {{feeInfo.paidStatus === 'paid' ? '已缴费' : '待缴费'}}
-      </view>
-    </view>
-    <text class="expire-date">到期日：{{feeInfo.expireDate}}</text>
-    <view class="overdue-tip" wx:if="{{feeInfo.paidStatus !== 'paid'}}">
-      <text class="overdue-text">⚠️ 请及时缴费，避免影响托管服务</text>
-    </view>
-  </view>
-
-  <!-- 费用标准 -->
-  <view class="fee-standard-card">
-    <text class="card-title">收费标准</text>
-    <view class="price-list">
-      <view class="price-item">
-        <text class="price-label">月托</text>
-        <text class="price-value">{{feeInfo.priceMonth}}<text class="price-unit">元/月</text></text>
-      </view>
-      <view class="price-divider"></view>
-      <view class="price-item">
-        <text class="price-label">学期托</text>
-        <view class="term-price">
-          <text class="price-value">{{feeInfo.priceTerm}}<text class="price-unit">元/学期</text></text>
-          <text class="original-price">{{feeInfo.originalPriceTerm}}元</text>
-        </view>
-      </view>
-    </view>
-    <view class="service-section">
-      <text class="service-title">包含服务</text>
-      <view class="service-tags">
-        <view class="service-tag" wx:for="{{feeInfo.services}}" wx:key="*this">{{item}}</view>
+      <view class="user-info">
+        <text class="user-name">{{profile.name || '用户'}}</text>
+        <text class="user-role">家长身份</text>
       </view>
     </view>
   </view>
 
-  <!-- 缴费历史 -->
-  <view class="history-card">
-    <text class="card-title">缴费记录</text>
-    <view class="history-list">
-      <view class="history-item" wx:for="{{history}}" wx:key="date">
-        <view class="history-left">
-          <view class="status-dot {{item.status}}"></view>
-          <text class="history-date">{{item.date}}</text>
-        </view>
-        <text class="history-amount">{{item.amount}}元</text>
-        <text class="history-status {{item.status}}">{{item.status === 'paid' ? '已支付' : '待支付'}}</text>
-      </view>
+  <!-- 菜单列表 -->
+  <view class="menu-section">
+    <view class="menu-item" bindtap="bindChild">
+      <text class="menu-icon">👶</text>
+      <text class="menu-text">绑定孩子</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="viewRecords">
+      <text class="menu-icon">📋</text>
+      <text class="menu-text">打卡记录</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="viewFee">
+      <text class="menu-icon">💰</text>
+      <text class="menu-text">缴费记录</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="contactTeacher">
+      <text class="menu-icon">📞</text>
+      <text class="menu-text">联系老师</text>
+      <text class="menu-arrow">›</text>
     </view>
   </view>
 
-  <!-- 底部操作 -->
-  <view class="action-section">
-    <view class="contact-btn" bindtap="handleContactTeacher">
-      <text class="contact-btn-text">联系老师</text>
+  <!-- 设置列表 -->
+  <view class="menu-section">
+    <view class="menu-item" bindtap="clearCache">
+      <text class="menu-icon">🗑️</text>
+      <text class="menu-text">清除缓存</text>
+      <text class="menu-arrow">›</text>
     </view>
-    <view class="switch-btns">
-      <view class="switch-btn" bindtap="handleSwitchChild">
-        <text class="switch-btn-text">切换孩子</text>
-      </view>
-      <view class="switch-btn" bindtap="handleSwitchRole">
-        <text class="switch-btn-text">切换角色</text>
-      </view>
+    <view class="menu-item" bindtap="about">
+      <text class="menu-icon">ℹ️</text>
+      <text class="menu-text">关于我们</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section">
+    <view class="logout-btn" bindtap="logout">
+      <text class="logout-text">退出登录</text>
     </view>
   </view>
 

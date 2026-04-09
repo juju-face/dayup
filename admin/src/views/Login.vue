@@ -44,25 +44,40 @@
             登录
           </el-button>
         </el-form-item>
+
+        <el-form-item>
+          <el-button
+            type="default"
+            size="large"
+            class="init-btn"
+            :loading="initLoading"
+            @click="handleInitAdmin"
+          >
+            初始化管理员账号
+          </el-button>
+        </el-form-item>
       </el-form>
       
       <div class="login-tips">
         <p>默认账号: admin</p>
         <p>默认密码: 123456</p>
+        <p class="tip-text">首次使用请先点击"初始化管理员账号"</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
+import cloudService from '../utils/cloud'
 
 const router = useRouter()
 const loginFormRef = ref(null)
 const loading = ref(false)
+const initLoading = ref(false)
 
 const loginForm = reactive({
   username: '',
@@ -79,27 +94,74 @@ const loginRules = {
   ]
 }
 
+// 检查是否已登录
+onMounted(async () => {
+  try {
+    const loginStatus = await cloudService.checkLoginStatus()
+    if (loginStatus.isLoggedIn) {
+      ElMessage.success('已登录，自动跳转')
+      router.push('/dashboard')
+    }
+  } catch (error) {
+    console.error('检查登录状态失败:', error)
+  }
+})
+
 const handleLogin = async () => {
   if (!loginFormRef.value) return
   
-  await loginFormRef.value.validate((valid) => {
+  await loginFormRef.value.validate(async (valid) => {
     if (valid) {
       loading.value = true
       
-      // 模拟登录验证
-      setTimeout(() => {
-        if (loginForm.username === 'admin' && loginForm.password === '123456') {
-          localStorage.setItem('admin_logged_in', 'true')
-          localStorage.setItem('admin_username', loginForm.username)
+      try {
+        console.log('[Login] 开始登录...')
+        console.log('[Login] 账号:', loginForm.username)
+        console.log('[Login] 密码:', loginForm.password)
+        
+        const result = await cloudService.login(
+          loginForm.username,
+          loginForm.password
+        )
+        
+        console.log('[Login] 登录结果:', result)
+        
+        if (result.success) {
           ElMessage.success('登录成功')
           router.push('/dashboard')
         } else {
-          ElMessage.error('用户名或密码错误')
+          ElMessage.error(result.message || '登录失败')
         }
+      } catch (error) {
+        console.error('[Login] 登录异常:', error)
+        ElMessage.error('登录失败: ' + (error.message || '未知错误'))
+      } finally {
         loading.value = false
-      }, 500)
+      }
     }
   })
+}
+
+const handleInitAdmin = async () => {
+  initLoading.value = true
+  
+  try {
+    const result = await cloudService.initAdmin()
+    
+    if (result.success) {
+      ElMessage.success(result.message)
+      // 自动填充默认账号
+      loginForm.username = result.data.username
+      loginForm.password = result.data.password
+    } else {
+      ElMessage.warning(result.message)
+    }
+  } catch (error) {
+    console.error('初始化失败:', error)
+    ElMessage.error('初始化失败，请重试')
+  } finally {
+    initLoading.value = false
+  }
 }
 </script>
 
@@ -140,6 +202,10 @@ const handleLogin = async () => {
   .login-btn {
     width: 100%;
   }
+  
+  .init-btn {
+    width: 100%;
+  }
 }
 
 .login-tips {
@@ -152,6 +218,11 @@ const handleLogin = async () => {
     font-size: 12px;
     color: #999;
     margin: 4px 0;
+  }
+  
+  .tip-text {
+    color: #f56c6c;
+    margin-top: 10px;
   }
 }
 </style>

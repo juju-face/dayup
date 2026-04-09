@@ -10,7 +10,7 @@
     <!-- 家长信息行 -->
     <view class="family-header">
       <view class="parent-section">
-        <image class="parent-avatar" src="/assets/default-avatar.png" mode="aspectFill"></image>
+        <image class="parent-avatar" src="https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0" mode="aspectFill"></image>
         <view class="parent-text">
           <text class="parent-phone">{{parentProfile.phone}}</text>
           <text class="parent-label">家长</text>
@@ -19,7 +19,7 @@
       <view class="family-divider"></view>
       <!-- 当前孩子信息 -->
       <view class="current-child-section" wx:if="{{currentChild}}">
-        <image class="child-avatar" src="{{currentChild.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+        <image class="child-avatar" src="{{currentChild.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"></image>
         <view class="child-text">
           <text class="child-name">{{currentChild.name}}</text>
           <text class="child-class">{{currentChild.school}} {{currentChild.className}}</text>
@@ -38,7 +38,7 @@
           bindtap="handleSwitchChild"
           data-id="{{child.id}}"
         >
-          <image class="tab-avatar" src="{{child.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+          <image class="tab-avatar" src="{{child.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"></image>
           <text class="tab-name">{{child.name}}</text>
         </view>
       </scroll-view>
@@ -53,8 +53,8 @@
   </view>
 
   <!-- 费用状态卡 -->
-  <view class="fee-status-card" bindtap="handleFeeDetail" wx:if="{{currentChild}}">
-    <view class="fee-header">
+  <view class="fee-status-card" wx:if="{{currentChild}}">
+    <view class="fee-header" bindtap="handleFeeDetail">
       <view class="fee-left">
         <text class="fee-label">托管费用</text>
         <view class="fee-amount">
@@ -79,12 +79,11 @@
         <text class="info-value">{{feeInfo.expireDate}}</text>
       </view>
     </view>
-    <view wx:if="{{feeInfo.paidStatus !== 'paid'}}" class="pay-btn" catchtap="handlePay">
-      <text class="pay-btn-text">立即缴费</text>
-    </view>
-    <view wx:if="{{feeInfo.paidStatus === 'paid' && feeInfo.remainingDays <= 7}}" class="renew-tip">
-      <text class="renew-text">⚠️ 即将到期，请及时续费</text>
-    </view>
+  </view>
+
+  <!-- 立即缴费按钮 - 仅剩余天数小于7天时显示 -->
+  <view wx:if="{{feeInfo.remainingDays < 7}}" class="pay-btn" bindtap="handlePay">
+    <text class="pay-btn-text">立即缴费</text>
   </view>
 
   <!-- 当前孩子详细信息 -->

@@ -6,14 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "diagnose": "node debug-cloud.js",
+    "setup": "fix-cloud.bat",
+    "test-api": "node -e \"import('./src/utils/http-api.js').then(m => m.default.testConnection()).then(r => console.log('测试结果:', r))\""
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "axios": "^1.6.7",
     "echarts": "^5.4.3",
     "element-plus": "^2.6.1",
-    "tcb-js-sdk": "^1.10.10",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

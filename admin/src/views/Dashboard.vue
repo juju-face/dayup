@@ -1,6 +1,5 @@
 <template>
   <div class="dashboard">
-    <!-- 统计卡片 -->
     <el-row :gutter="20" class="statistics-row">
       <el-col :span="6">
         <el-card class="stat-card">
@@ -56,7 +55,6 @@
       </el-col>
     </el-row>
 
-    <!-- 图表区域 -->
     <el-row :gutter="20" class="chart-row">
       <el-col :span="12">
         <el-card>
@@ -80,7 +78,6 @@
       </el-col>
     </el-row>
 
-    <!-- 快捷操作 -->
     <el-card class="quick-actions">
       <template #header>
         <div class="card-header">
@@ -109,9 +106,11 @@
 import { ref, onMounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
+import cloudService from '../utils/cloud'
 
 const gradeChartRef = ref(null)
 const feeChartRef = ref(null)
+const loading = ref(false)
 
 const statistics = ref({
   totalStudents: 0,
@@ -120,39 +119,76 @@ const statistics = ref({
   paidFee: 0
 })
 
-// 初始化数据
-const initData = () => {
-  // 从本地存储获取数据
-  const students = JSON.parse(localStorage.getItem('students') || '[]')
-  const feeSettings = JSON.parse(localStorage.getItem('feeSettings') || '{}')
-  const feeRecords = JSON.parse(localStorage.getItem('feeRecords') || '[]')
+let studentsCache = []
+let feeRecordsCache = []
 
-  // 统计学生数
-  statistics.value.totalStudents = students.length
+const initData = async () => {
+  loading.value = true
+  try {
+    const [studentsResult, feeRecordsResult, settingsResult] = await Promise.all([
+      cloudService.getAllStudents(),
+      cloudService.getAllFeeRecords(),
+      cloudService.getSystemSettings('feeSettings')
+    ])
 
-  // 统计家长数（根据手机号去重）
-  const parentPhones = [...new Set(students.map(s => s.parentPhone).filter(Boolean))]
-  statistics.value.totalParents = parentPhones.length
+    if (studentsResult.success) {
+      studentsCache = studentsResult.data
+    }
 
-  // 统计费用
-  const currentMonth = new Date().toISOString().slice(0, 7)
-  const monthlyFee = feeSettings.monthlyFee || 1500
-  statistics.value.totalFee = students.length * monthlyFee
+    if (feeRecordsResult.success) {
+      feeRecordsCache = feeRecordsResult.data
+    }
 
-  // 统计已缴费
-  const paidThisMonth = feeRecords
-    .filter(r => r.month === currentMonth && r.status === 'paid')
-    .reduce((sum, r) => sum + (r.amount || 0), 0)
-  statistics.value.paidFee = paidThisMonth
+    // 优先从云端获取费用设置，降级到 localStorage
+    let feeSettings = { monthlyFee: 1500 }
+    if (settingsResult.success && settingsResult.data) {
+      feeSettings = typeof settingsResult.data === 'string' 
+        ? JSON.parse(settingsResult.data) 
+        : settingsResult.data
+    } else {
+      const localSettings = JSON.parse(localStorage.getItem('feeSettings') || '{}')
+      if (localSettings.monthlyFee !== undefined) {
+        feeSettings = localSettings
+      }
+    }
 
-  // 初始化图表
-  nextTick(() => {
-    initGradeChart(students)
-    initFeeChart(students, feeRecords, currentMonth)
-  })
+    statistics.value.totalStudents = studentsCache.length
+
+    const parentPhones = [...new Set(studentsCache.map(s => s.parentPhone).filter(Boolean))]
+    statistics.value.totalParents = parentPhones.length
+
+    const currentMonth = new Date().toISOString().slice(0, 7)
+    const monthlyFee = feeSettings.monthlyFee || 1500
+
+    // 使用 payDate 字段过滤（格式为 2026-04-07）
+    const paidRecords = feeRecordsCache
+      .filter(r => r.payDate && r.payDate.startsWith(currentMonth) && r.status === 'paid')
+    const paidThisMonth = paidRecords.reduce((sum, r) => sum + (r.amount || 0), 0)
+    
+    // 已缴费学生数
+    const paidStudentIds = new Set(paidRecords.map(r => r.studentId))
+    const paidCount = paidStudentIds.size
+    const unpaidCount = studentsCache.length - paidCount
+    
+    // 实收 = 已缴费记录金额之和
+    statistics.value.paidFee = paidThisMonth
+    // 应收 = 实收 + 未缴金额
+    statistics.value.totalFee = paidThisMonth + (unpaidCount * monthlyFee)
+
+    nextTick(() => {
+      initGradeChart(studentsCache)
+      initFeeChart(studentsCache, feeRecordsCache, currentMonth)
+    })
+
+    ElMessage.success('数据加载成功')
+  } catch (error) {
+    console.error('初始化数据失败:', error)
+    ElMessage.error('数据加载失败，请重试')
+  } finally {
+    loading.value = false
+  }
 }
 
-// 年级分布图表
 const initGradeChart = (students) => {
   if (!gradeChartRef.value) return
 
@@ -160,7 +196,7 @@ const initGradeChart = (students) => {
   
   const gradeCount = {}
   students.forEach(s => {
-    const grade = s.grade || '未设置'
+    const grade = s.grade || s.className || '未设置'
     gradeCount[grade] = (gradeCount[grade] || 0) + 1
   })
 
@@ -192,13 +228,13 @@ const initGradeChart = (students) => {
   window.addEventListener('resize', () => chart.resize())
 }
 
-// 缴费情况图表
 const initFeeChart = (students, feeRecords, currentMonth) => {
   if (!feeChartRef.value) return
 
   const chart = echarts.init(feeChartRef.value)
 
-  const paidCount = feeRecords.filter(r => r.month === currentMonth && r.status === 'paid').length
+  // 使用 payDate 字段过滤
+  const paidCount = feeRecords.filter(r => r.payDate && r.payDate.startsWith(currentMonth) && r.status === 'paid').length
   const unpaidCount = students.length - paidCount
 
   const option = {
@@ -220,9 +256,8 @@ const initFeeChart = (students, feeRecords, currentMonth) => {
   window.addEventListener('resize', () => chart.resize())
 }
 
-const refreshData = () => {
-  initData()
-  ElMessage.success('数据已刷新')
+const refreshData = async () => {
+  await initData()
 }
 
 onMounted(() => {

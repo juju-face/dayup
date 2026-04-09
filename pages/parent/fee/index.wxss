@@ -4,6 +4,49 @@
   padding-bottom: 40rpx;
 }
 
+/* 顶部区域 - 整体橙色背景 */
+.header-section {
+  background: linear-gradient(135deg, #FF7A45 0%, #FF9A6B 100%);
+  border-radius: 0 0 40rpx 40rpx;
+  padding-bottom: 32rpx;
+}
+
+/* 自定义导航栏 */
+.nav-bar {
+  background: transparent;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+}
+
+.nav-back {
+  width: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-icon {
+  font-size: 48rpx;
+  color: #fff;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+.nav-placeholder {
+  width: 60rpx;
+}
+
 /* 加载中 */
 .loading-state {
   display: flex;
@@ -46,46 +89,28 @@
 
 /* 孩子信息头部 */
 .child-header {
-  background: #FFFFFF;
-  padding: 32rpx;
-  margin-bottom: 24rpx;
   text-align: center;
+  padding: 0 32rpx 8rpx;
 }
 
 .child-name {
   font-size: 36rpx;
   font-weight: bold;
-  color: #333;
+  color: #fff;
   display: block;
   margin-bottom: 8rpx;
 }
 
 .child-class {
   font-size: 26rpx;
-  color: #999;
-}
-
-/* 顶部横幅 */
-.banner {
-  height: 180rpx;
-  background: linear-gradient(135deg, #FF7A45 0%, #FF9A6B 100%);
-  border-radius: 0 0 40rpx 40rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.banner-title {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: white;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* 费用标准卡片 */
 .price-card {
   background: #FFFFFF;
   border-radius: 24rpx;
-  margin: -40rpx 24rpx 24rpx;
+  margin: 24rpx 24rpx;
   padding: 32rpx;
   box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
   position: relative;
@@ -237,6 +262,12 @@
   border-radius: 48rpx;
   padding: 28rpx;
   text-align: center;
+  border: none;
+  margin: 0;
+  line-height: 1;
+}
+.pay-btn::after {
+  border: none;
 }
 
 .pay-btn-text {

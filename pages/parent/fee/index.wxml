@@ -13,15 +13,24 @@
 
   <!-- 有孩子信息 -->
   <block wx:else>
-    <!-- 孩子信息头部 -->
-    <view class="child-header">
-      <text class="child-name">{{currentChild.name}}</text>
-      <text class="child-class">{{currentChild.school}} {{currentChild.className}}</text>
-    </view>
-
-    <!-- 顶部横幅 -->
-    <view class="banner">
-      <text class="banner-title">托管费用</text>
+    <!-- 顶部橙色背景区域（包含导航栏、标题、孩子信息） -->
+    <view class="header-section" style="padding-top:{{statusBarHeight}}px;">
+      <!-- 自定义导航栏 -->
+      <view class="nav-bar" style="height:{{navBarHeight}}px;">
+        <view class="nav-content" style="height:{{navBarHeight}}px;">
+          <view class="nav-back" style="height:{{navBarHeight}}px;line-height:{{navBarHeight}}px;" bindtap="handleBack">
+            <text class="back-icon">‹</text>
+          </view>
+          <text class="nav-title">托管费用</text>
+          <view class="nav-placeholder"></view>
+        </view>
+      </view>
+      
+      <!-- 孩子信息 -->
+      <view class="child-header">
+        <text class="child-name">{{currentChild.name}}</text>
+        <text class="child-class">{{currentChild.school}} {{currentChild.className}}</text>
+      </view>
     </view>
 
     <!-- 费用标准卡片 -->
@@ -61,11 +70,11 @@
         <text class="expire-label">到期日</text>
         <text class="expire-date">{{feeInfo.expireDate}}</text>
       </view>
-      <view wx:if="{{feeInfo.paidStatus !== 'paid'}}" class="pay-btn" bindtap="handlePay">
-        <text class="pay-btn-text">立即缴费 ¥{{feeInfo.priceMonth}}</text>
-      </view>
-      <view wx:else class="paid-info">
+      <view wx:if="{{feeInfo.paidStatus === 'paid'}}" class="paid-info">
         <text class="paid-text">✓ 本月已缴费</text>
+      </view>
+      <view wx:else class="pay-btn" bindtap="handlePay">
+        <text class="pay-btn-text">立即缴费 ¥{{feeInfo.priceMonth}}</text>
       </view>
     </view>
 
